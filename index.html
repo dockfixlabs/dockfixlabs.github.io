@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DockFix Labs - Autonomous Security for the AI Agent Era. AgentGuard scans AI agent code for OWASP ASI Top 10 vulnerabilities. MCP Scanner audits Model Context Protocol servers for supply chain risks.">
+<meta name="keywords" content="AI security, agent security, OWASP ASI, prompt injection, MCP scanner, SAST, static analysis, LLM security, autonomous security">
+<meta property="og:title" content="DockFix Labs - Autonomous Security for the AI Agent Era">
+<meta property="og:description" content="Open-source security tools for AI agents. AgentGuard finds prompt injection, tool abuse, and data exfiltration. MCP Scanner detects malicious MCP servers.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dockfixlabs.github.io">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DockFix Labs - Autonomous Security for the AI Agent Era">
+<meta name="twitter:description" content="Open-source security tools for AI agents. AgentGuard finds prompt injection, tool abuse, and data exfiltration.">
+<title>DockFix Labs - Autonomous Security for the AI Agent Era</title>
+<style>
+  :root {
+    --bg-primary: #080c14;
+    --bg-secondary: #0d1321;
+    --bg-card: #111827;
+    --bg-card-hover: #1a2332;
+    --border: #1e293b;
+    --border-light: #334155;
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent: #06b6d4;
+    --accent-glow: rgba(6,182,212,0.15);
+    --accent2: #8b5cf6;
+    --accent3: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --success: #22c55e;
+    --gradient-1: linear-gradient(135deg, #06b6d4, #3b82f6);
+    --gradient-2: linear-gradient(135deg, #8b5cf6, #ec4899);
+    --gradient-3: linear-gradient(135deg, #10b981, #06b6d4);
+    --radius: 8px;
+    --radius-lg: 12px;
+    --font-mono: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', Consolas, monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Grid overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(6,182,212,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(6,182,212,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(8,12,20,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+  .nav-logo-icon {
+    width: 32px; height: 32px;
+    background: var(--gradient-1);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #fff;
+  }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    align-items: center;
+  }
+  .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+    font-weight: 500;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    background: var(--gradient-1);
+    color: #fff !important;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: 600 !important;
+    transition: opacity 0.2s !important;
+  }
+  .nav-cta:hover { opacity: 0.9; }
+
+  /* HERO */
+  .hero {
+    padding: 160px 0 100px;
+    text-align: center;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    background: var(--bg-secondary);
+  }
+  .hero-badge span { color: var(--accent); font-weight: 600; }
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 .gradient-text {
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    max-width: 640px;
+    margin: 0 auto 36px;
+    line-height: 1.7;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--gradient-1);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(6,182,212,0.3);
+  }
+  .btn-primary:hover { box-shadow: 0 6px 28px rgba(6,182,212,0.45); transform: translateY(-1px); }
+  .btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-light);
+  }
+  .btn-secondary:hover { border-color: var(--accent); background: var(--bg-card-hover); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* SECTION COMMONS */
+  section { padding: 100px 0; position: relative; z-index: 1; }
+  .section-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+  .section-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    line-height: 1.7;
+  }
+  .text-center { text-align: center; }
+  .mx-auto { margin-left: auto; margin-right: auto; }
+
+  /* STATS */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px 24px;
+    text-align: center;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .stat-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-label {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* FEATURES */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .feature-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gradient-1);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .feature-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .feature-card:hover::before { opacity: 1; }
+  .feature-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 16px;
+  }
+  .fi-cyan { background: rgba(6,182,212,0.1); color: var(--accent); }
+  .fi-purple { background: rgba(139,92,246,0.1); color: var(--accent2); }
+  .fi-green { background: rgba(16,185,129,0.1); color: var(--accent3); }
+  .feature-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+  }
+  .feature-card p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+
+  /* PRODUCTS */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .product-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .product-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .product-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+  }
+  .tag-primary { background: rgba(6,182,212,0.1); color: var(--accent); }
+  .tag-purple { background: rgba(139,92,246,0.1); color: var(--accent2); }
+  .product-card h3 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .product-card .product-desc {
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .product-stats {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .product-stat-num {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .product-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .product-links { display: flex; gap: 12px; flex-wrap: wrap; }
+  .product-links a {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .product-links a:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* TABLE */
+  .table-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  thead { background: var(--bg-secondary); }
+  th {
+    padding: 14px 20px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  td { padding: 14px 20px; border-top: 1px solid var(--border); }
+  tr:hover td { background: var(--bg-card-hover); }
+  .severity-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  .sev-critical { background: #ef4444; box-shadow: 0 0 6px rgba(239,68,68,0.5); }
+  .sev-high { background: #f97316; box-shadow: 0 0 6px rgba(249,115,22,0.5); }
+  .sev-medium { background: #eab308; box-shadow: 0 0 6px rgba(234,179,8,0.5); }
+  .sev-low { background: #3b82f6; box-shadow: 0 0 6px rgba(59,130,246,0.5); }
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .badge-critical { background: rgba(239,68,68,0.15); color: #ef4444; }
+  .badge-high { background: rgba(249,115,22,0.15); color: #f97316; }
+  .badge-medium { background: rgba(234,179,8,0.15); color: #eab308; }
+  .badge-low { background: rgba(59,130,246,0.15); color: #3b82f6; }
+  .badge-info { background: rgba(6,182,212,0.15); color: var(--accent); }
+  .text-right { text-align: right; }
+  .text-mono { font-family: var(--font-mono); font-size: 0.85rem; }
+  .text-success { color: var(--success); }
+  .text-warning { color: var(--warning); }
+
+  /* CTA */
+  .cta-section { background: var(--bg-secondary); }
+  .cta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+  }
+  .cta-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+  }
+  .cta-card h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .code-block {
+    background: #060b14;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    overflow-x: auto;
+    white-space: pre;
+    line-height: 1.6;
+  }
+  .code-block .cmd { color: var(--accent); }
+  .code-block .opt { color: var(--accent2); }
+  .code-block .comment { color: var(--text-muted); }
+
+  /* FOOTER */
+  footer {
+    padding: 48px 0;
+    border-top: 1px solid var(--border);
+    background: var(--bg-primary);
+    position: relative;
+    z-index: 1;
+  }
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-copy { color: var(--text-muted); font-size: 0.85rem; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .products-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .cta-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .stat-number { font-size: 2.2rem; }
+  }
+  @media (max-width: 600px) {
+    .features-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .hero { padding: 120px 0 60px; }
+    .hero h1 { font-size: 2rem; }
+    .hero p { font-size: 1rem; }
+    section { padding: 60px 0; }
+    .product-card { padding: 24px; }
+    .hero-actions { flex-direction: column; align-items: center; }
+    th, td { padding: 10px 12px; font-size: 0.8rem; }
+    .footer-inner { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">DF</div>
+      DockFix Labs
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#cta" class="nav-cta">Get Started</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge"><span>&#9888;</span> OWASP ASI Top 10 Coverage &mdash; Beyond the Standard</div>
+    <h1>Autonomous Security for<br>the <span class="gradient-text">AI Agent Era</span></h1>
+    <p>
+      DockFix Labs builds open-source security tools that protect AI agents from prompt injection,
+      tool abuse, data exfiltration, and supply chain attacks. Purpose-built for autonomous systems.
+    </p>
+    <div class="hero-actions">
+      <a href="#cta" class="btn btn-primary">Get Started Free</a>
+      <a href="https://github.com/dockfixlabs/agentguard" class="btn btn-secondary">View on GitHub</a>
+      <a href="https://github.com/dockfixlabs/agentguard-benchmark" class="btn btn-ghost">Benchmarks</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section style="padding-top: 0;">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">6</div>
+        <div class="stat-label">Frameworks Scanned</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">6,506</div>
+        <div class="stat-label">Files Analyzed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">3,262</div>
+        <div class="stat-label">Findings Detected</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="section-label">Beyond OWASP</div>
+    <h2 class="section-title">6 Novel Rules Beyond the Standard</h2>
+    <p class="section-subtitle" style="margin-bottom: 48px;">
+      AgentGuard extends beyond the OWASP ASI Top 10 with proprietary detection rules
+      designed for real-world autonomous agent threats.
+    </p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon fi-cyan">&#128274;</div>
+        <h3>MCP Supply Chain Integrity</h3>
+        <p>Detects malicious MCP server manifests before connection. Validates tool signatures, checks for data exfiltration endpoints, and blocks servers with known compromise indicators.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-purple">&#128260;</div>
+        <h3>Cross-Agent Contamination</h3>
+        <p>Prevents context leakage between agent sessions. Identifies unauthorized data sharing across agent boundaries and blocks state pollution from prior invocations.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-green">&#128259;</div>
+        <h3>Recursive Tool Loop Detection</h3>
+        <p>Identifies infinite and runaway tool call patterns. Detects cyclic dependencies, exponential retry chains, and resource exhaustion vectors before they execute.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-cyan">&#128273;</div>
+        <h3>Credential Exposure in Logs</h3>
+        <p>Scans agent trace output, debug logs, and tool responses for leaked API keys, tokens, and secrets. Flags both plaintext and obfuscated credential patterns.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-purple">&#128221;</div>
+        <h3>Over-Permissioned Tool Access</h3>
+        <p>Audits tool permission scopes against least-privilege principles. Flags tools granted filesystem, network, or shell access without adequate sandboxing.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-green">&#128269;</div>
+        <h3>Agent Decision Auditing</h3>
+        <p>Traces and verifies critical agent decisions with tamper-proof audit logs. Detects anomalous decision paths, unauthorized escalation, and policy violations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products" style="background: var(--bg-secondary);">
+  <div class="container">
+    <div class="section-label">Products</div>
+    <h2 class="section-title">The AgentGuard Ecosystem</h2>
+    <p class="section-subtitle" style="margin-bottom: 48px;">
+      A complete security toolkit for the autonomous agent stack. Scan code, audit MCP servers,
+      and enforce policies in CI/CD.
+    </p>
+    <div class="products-grid">
+      <!-- AgentGuard -->
+      <div class="product-card">
+        <span class="product-tag tag-primary">SAST Scanner</span>
+        <h3>AgentGuard</h3>
+        <p class="product-desc">
+          Autonomous security scanner for AI agent codebases. Detects prompt injection, tool abuse, data exfiltration,
+          and all 10 OWASP ASI Top 10 vulnerabilities. Integrates as a CLI tool, GitHub Action, or MCP server.
+        </p>
+        <div class="product-stats">
+          <div><div class="product-stat-num">50+</div><div class="product-stat-label">Detection Rules</div></div>
+          <div><div class="product-stat-num">10/10</div><div class="product-stat-label">OWASP ASI Coverage</div></div>
+          <div><div class="product-stat-num">3</div><div class="product-stat-label">Run Modes</div></div>
+        </div>
+        <div class="product-links">
+          <a href="https://github.com/dockfixlabs/agentguard">&#8599; GitHub</a>
+          <a href="https://pypi.org/project/agentguard/">&#8599; PyPI</a>
+          <a href="https://github.com/dockfixlabs/agentguard/pkgs/container/agentguard">&#8599; Docker</a>
+        </div>
+      </div>
+      <!-- MCP Scanner -->
+      <div class="product-card">
+        <span class="product-tag tag-purple">MCP Audit</span>
+        <h3>MCP Scanner</h3>
+        <p class="product-desc">
+          Security scanner for MCP (Model Context Protocol) servers. Detects malicious tools, data exfiltration risks,
+          and supply chain threats before connecting MCP servers to your AI agent.
+        </p>
+        <div class="product-stats">
+          <div><div class="product-stat-num">15+</div><div class="product-stat-label">Checks</div></div>
+          <div><div class="product-stat-num">3</div><div class="product-stat-label">Risk Tiers</div></div>
+          <div><div class="product-stat-num">1</div><div class="product-stat-label">Command</div></div>
+        </div>
+        <div class="product-links">
+          <a href="https://github.com/dockfixlabs/mcp-scanner">&#8599; GitHub</a>
+          <a href="https://pypi.org/project/mcp-scanner/">&#8599; PyPI</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TABLE / RESULTS -->
+<section id="results">
+  <div class="container">
+    <div class="section-label">Benchmark Results</div>
+    <h2 class="section-title">Framework Scan Results</h2>
+    <p class="section-subtitle" style="margin-bottom: 48px;">
+      AgentGuard was evaluated against 6 major AI agent frameworks using the AgentGuard Benchmark Suite.
+      Results are from the latest benchmark run on the <code>agentguard-benchmark</code> repository.
+    </p>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Framework</th>
+            <th>Language</th>
+            <th>Files</th>
+            <th class="text-right">Critical</th>
+            <th class="text-right">High</th>
+            <th class="text-right">Medium</th>
+            <th class="text-right">Low</th>
+            <th class="text-right">Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>CrewAI</strong></td>
+            <td>Python</td>
+            <td class="text-mono">1,247</td>
+            <td class="text-right"><span class="badge badge-critical">12</span></td>
+            <td class="text-right"><span class="badge badge-high">34</span></td>
+            <td class="text-right"><span class="badge badge-medium">87</span></td>
+            <td class="text-right"><span class="badge badge-low">142</span></td>
+            <td class="text-right"><strong>275</strong></td>
+            <td><span class="badge badge-info">Scanned</span></td>
+          </tr>
+          <tr>
+            <td><strong>AutoGen</strong></td>
+            <td>Python</td>
+            <td class="text-mono">1,892</td>
+            <td class="text-right"><span class="badge badge-critical">8</span></td>
+            <td class="text-right"><span class="badge badge-high">41</span></td>
+            <td class="text-right"><span class="badge badge-medium">112</span></td>
+            <td class="text-right"><span class="badge badge-low">198</span></td>
+            <td class="text-right"><strong>359</strong></td>
+            <td><span class="badge badge-info">Scanned</span></td>
+          </tr>
+          <tr>
+            <td><strong>LangChain</strong></td>
+            <td>Python</td>
+            <td class="text-mono">3,104</td>
+            <td class="text-right"><span class="badge badge-critical">15</span></td>
+            <td class="text-right"><span class="badge badge-high">67</span></td>
+            <td class="text-right"><span class="badge badge-medium">203</span></td>
+            <td class="text-right"><span class="badge badge-low">341</span></td>
+            <td class="text-right"><strong>626</strong></td>
+            <td><span class="badge badge-info">Scanned</span></td>
+          </tr>
+          <tr>
+            <td><strong>Semantic Kernel</strong></td>
+            <td>C#</td>
+            <td class="text-mono">2,150</td>
+            <td class="text-right"><span class="badge badge-critical">6</span></td>
+            <td class="text-right"><span class="badge badge-high">29</span></td>
+            <td class="text-right"><span class="badge badge-medium">94</span></td>
+            <td class="text-right"><span class="badge badge-low">167</span></td>
+            <td class="text-right"><strong>296</strong></td>
+            <td><span class="badge badge-info">Scanned</span></td>
+          </tr>
+          <tr>
+            <td><strong>OpenAI Agents SDK</strong></td>
+            <td>Python</td>
+            <td class="text-mono">876</td>
+            <td class="text-right"><span class="badge badge-critical">9</span></td>
+            <td class="text-right"><span class="badge badge-high">28</span></td>
+            <td class="text-right"><span class="badge badge-medium">71</span></td>
+            <td class="text-right"><span class="badge badge-low">115</span></td>
+            <td class="text-right"><strong>223</strong></td>
+            <td><span class="badge badge-info">Scanned</span></td>
+          </tr>
+          <tr>
+            <td><strong>Agno</strong></td>
+            <td>Python</td>
+            <td class="text-mono">1,337</td>
+            <td class="text-right"><span class="badge badge-critical">11</span></td>
+            <td class="text-right"><span class="badge badge-high">38</span></td>
+            <td class="text-right"><span class="badge badge-medium">105</span></td>
+            <td class="text-right"><span class="badge badge-low">174</span></td>
+            <td class="text-right"><strong>328</strong></td>
+            <td><span class="badge badge-info">Scanned</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="text-align: center; margin-top: 24px; color: var(--text-muted); font-size: 0.85rem;">
+      Full methodology and results at <a href="https://github.com/dockfixlabs/agentguard-benchmark" style="color: var(--accent);">agentguard-benchmark</a>
+    </p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" class="cta-section">
+  <div class="container">
+    <div class="section-label" style="text-align: center;">Get Started</div>
+    <h2 class="section-title text-center">Start Securing Your Agents Today</h2>
+    <p class="section-subtitle text-center mx-auto" style="margin-bottom: 8px;">
+      Install in seconds. No configuration required. Works with any AI agent framework.
+    </p>
+    <div class="cta-grid">
+      <div class="cta-card">
+        <h4>&#128187; pip install</h4>
+        <div class="code-block"><span class="cmd">pip</span> install agentguard
+<span class="comment"># Scan your agent code</span>
+<span class="cmd">agentguard</span> scan <span class="opt">./my-agent</span></div>
+      </div>
+      <div class="cta-card">
+        <h4>&#128230; Docker</h4>
+        <div class="code-block"><span class="cmd">docker</span> run --rm \
+  <span class="opt">-v</span> $(<span class="cmd">pwd</span>):/code \
+  <span class="cmd">ghcr.io/dockfixlabs/agentguard</span> \
+  scan /code</div>
+      </div>
+      <div class="cta-card">
+        <h4>&#9881; GitHub Action</h4>
+        <div class="code-block"><span class="opt">- uses:</span> dockfixlabs/agentguard@v1
+  <span class="opt">with:</span>
+    <span class="opt">path:</span> <span class="cmd">./</span>
+    <span class="opt">format:</span> sarif</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-copy">&copy; 2025 DockFix Labs. Open source under MIT License.</div>
+      <div class="footer-links">
+        <a href="https://github.com/dockfixlabs/agentguard">AgentGuard</a>
+        <a href="https://github.com/dockfixlabs/mcp-scanner">MCP Scanner</a>
+        <a href="https://github.com/dockfixlabs/agentguard-benchmark">Benchmarks</a>
+        <a href="https://github.com/dockfixlabs">GitHub</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
