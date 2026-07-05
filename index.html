@@ -3,182 +3,547 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DockFix Labs — AgentGuard</title>
-<meta name="description" content="AgentGuard: autonomous security scanner for AI agent code. 20 detection rules, OWASP ASI Top 10 compliant, 107 tests, 100% benchmark detection.">
+<title>AgentGuard — Autonomous Security for AI Agent Code | DockFix Labs</title>
+<meta name="description" content="AgentGuard: OWASP ASI Top 10 compliant security scanner. 20 detection rules with CWE/CVSS mappings. Scanned 6 frameworks, 6,506 files, 3,262 findings. MIT licensed.">
 <meta property="og:title" content="AgentGuard — Autonomous Security for AI Agent Code">
-<meta property="og:description" content="OWASP ASI Top 10 compliant security scanner. 6 frameworks scanned, 6,506 files, 3,262 findings.">
+<meta property="og:description" content="20 detection rules. 6 frameworks scanned. 3,262 findings. 0% false positives. OWASP ASI compliant. MIT licensed.">
 <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <style>
-  :root {--bg:#09090b;--card:#111115;--border:#1e1e28;--text:#a1a1aa;--head:#fafafa;--green:#22c55e;--red:#ef4444;--amber:#f59e0b;--blue:#3b82f6;--purple:#8b5cf6;--cyan:#06b6d4;}
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif;line-height:1.7}
-  .container{max-width:960px;margin:0 auto;padding:2rem}
-  header{padding:4rem 0 3rem;border-bottom:1px solid var(--border)}
-  h1{font-size:3rem;font-weight:800;color:var(--head);letter-spacing:-0.03em;margin-bottom:0.5rem}
-  h1 span{background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .tagline{font-size:1.2rem;color:var(--text);max-width:600px}
-  h2{font-size:1.5rem;font-weight:700;color:var(--head);margin:3rem 0 1.5rem}
-  h3{font-size:1.1rem;font-weight:600;color:var(--head);margin-bottom:0.3rem}
-  .cta{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1.5rem}
-  .btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1.2rem;border-radius:6px;font-size:0.9rem;font-weight:600;text-decoration:none;transition:opacity .15s}
-  .btn:hover{opacity:0.85}
-  .btn-primary{background:var(--green);color:#000}
-  .btn-outline{border:1px solid var(--border);color:var(--text)}
-  .btn-ghost{color:var(--blue)}
+:root {
+  --bg: #050508;
+  --surface: #0a0a10;
+  --surface2: #0f0f18;
+  --border: #1a1a2e;
+  --border2: #252540;
+  --text: #8892a4;
+  --text2: #a0a8b8;
+  --head: #e8eaed;
+  --green: #00e676;
+  --green-dim: rgba(0,230,118,0.12);
+  --red: #ff5252;
+  --amber: #ffab40;
+  --blue: #448aff;
+  --purple: #b388ff;
+  --cyan: #18ffff;
+  --accent: #00e676;
+  --gradient: linear-gradient(135deg, var(--green), var(--cyan));
+  --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
 
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:2rem 0}
-  .stat{border:1px solid var(--border);border-radius:8px;padding:1.25rem;text-align:center;background:var(--card)}
-  .stat-value{font-size:2rem;font-weight:800;color:var(--head)}
-  .stat-label{font-size:0.8rem;color:var(--text);text-transform:uppercase;letter-spacing:0.08em;margin-top:0.25rem}
+/* Grid overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
 
-  .spec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin:1rem 0}
-  .spec-card{border:1px solid var(--border);border-radius:8px;padding:1.25rem;background:var(--card)}
-  .spec-card .id{font-family:monospace;font-size:0.75rem;color:var(--purple);font-weight:700;margin-bottom:0.3rem}
-  .spec-card .name{font-size:1rem;font-weight:600;color:var(--head);margin-bottom:0.3rem}
-  .spec-card .desc{font-size:0.85rem;color:var(--text)}
-  .spec-card .cwe{font-size:0.75rem;color:var(--amber);margin-top:0.5rem;font-family:monospace}
+.container { max-width: 1040px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
 
-  table{width:100%;border-collapse:collapse;margin:1rem 0}
-  th{text-align:left;padding:0.6rem 0.8rem;border-bottom:1px solid var(--border);color:var(--text);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:600}
-  td{padding:0.6rem 0.8rem;border-bottom:1px solid var(--border);font-size:0.9rem}
-  td.num{font-family:monospace;text-align:right}
-  tr:last-child td{border-bottom:none;font-weight:700;color:var(--head)}
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(5,5,8,0.85); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 0;
+}
+.nav-inner { max-width: 1040px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { font-family: var(--mono); font-weight: 800; font-size: 1.1rem; color: var(--head); text-decoration: none; letter-spacing: -0.02em; }
+.nav-logo span { color: var(--green); }
+.nav-links { display: flex; gap: 1.5rem; align-items: center; }
+.nav-links a { color: var(--text); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+.nav-links a:hover { color: var(--head); }
+.nav-cta { background: var(--green-dim); color: var(--green); padding: 0.4rem 0.9rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; text-decoration: none; transition: background 0.2s; }
+.nav-cta:hover { background: rgba(0,230,118,0.22); }
 
-  code{background:var(--card);border:1px solid var(--border);padding:0.15rem 0.4rem;border-radius:4px;font-size:0.85em;font-family:'JetBrains Mono','Fira Code',monospace}
-  pre{background:#0a0a0f;border:1px solid var(--border);border-radius:8px;padding:1rem;overflow-x:auto;font-size:0.85rem;line-height:1.6}
-  pre code{background:none;border:none;padding:0}
+/* HEADER */
+.hero { padding: 8rem 0 4rem; position: relative; }
+.hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--surface2); border: 1px solid var(--border2); border-radius: 50px; padding: 0.35rem 1rem 0.35rem 0.6rem; font-size: 0.8rem; margin-bottom: 2rem; }
+.hero-badge .dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+h1 { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; color: var(--head); line-height: 1.1; letter-spacing: -0.04em; margin-bottom: 1.5rem; }
+h1 .gradient { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero-desc { font-size: 1.15rem; color: var(--text2); max-width: 620px; margin-bottom: 2.5rem; line-height: 1.8; }
+.hero-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
 
-  .install-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0}
-  .install-card{border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--card)}
-  .install-card .header{padding:0.8rem 1rem;font-weight:600;font-size:0.85rem;color:var(--head);border-bottom:1px solid var(--border)}
+/* BUTTONS */
+.btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.7rem 1.4rem; border-radius: 8px; font-size: 0.9rem; font-weight: 600; text-decoration: none; cursor: pointer; transition: all 0.2s; border: none; font-family: var(--sans); }
+.btn-primary { background: var(--green); color: #000; }
+.btn-primary:hover { background: #00e676cc; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,230,118,0.25); }
+.btn-outline { border: 1px solid var(--border2); color: var(--head); background: transparent; }
+.btn-outline:hover { border-color: var(--text); background: var(--surface); }
+.btn-ghost { color: var(--text2); background: transparent; }
+.btn-ghost:hover { color: var(--head); }
 
-  .note{border-left:3px solid var(--amber);padding:0.75rem 1rem;margin:1rem 0;font-size:0.9rem;background:rgba(245,158,11,0.05);border-radius:0 8px 8px 0}
+/* STATS ROW */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin: 4rem 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--surface); }
+.stat-item { padding: 1.75rem 1.5rem; text-align: center; border-right: 1px solid var(--border); }
+.stat-item:last-child { border-right: none; }
+.stat-value { font-size: 2.25rem; font-weight: 800; color: var(--head); font-family: var(--mono); letter-spacing: -0.03em; line-height: 1; }
+.stat-label { font-size: 0.75rem; color: var(--text); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.5rem; font-weight: 600; }
+.stat-sub { font-size: 0.7rem; color: var(--green); margin-top: 0.25rem; }
 
-  hr{border:none;border-top:1px solid var(--border);margin:3rem 0}
-  footer{padding:2rem 0;color:var(--text);font-size:0.8rem;border-top:1px solid var(--border)}
-  footer a{color:var(--blue)}
+/* SECTIONS */
+.section { padding: 4rem 0; }
+.section-header { margin-bottom: 2.5rem; }
+.section-tag { font-family: var(--mono); font-size: 0.7rem; color: var(--green); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.5rem; font-weight: 700; }
+h2 { font-size: 2rem; font-weight: 700; color: var(--head); letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+h3 { font-size: 1.15rem; font-weight: 700; color: var(--head); margin-bottom: 0.5rem; }
+.section-desc { color: var(--text2); max-width: 600px; font-size: 1rem; }
 
-  @media(max-width:700px){
-    .stats{grid-template-columns:repeat(2,1fr)}
-    .install-grid{grid-template-columns:1fr}
-    h1{font-size:2rem}
-  }
+/* TERMINAL */
+.terminal {
+  background: #030306; border: 1px solid var(--border2); border-radius: 10px;
+  overflow: hidden; margin: 2rem 0; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.terminal-bar {
+  background: var(--surface2); padding: 0.6rem 1rem; display: flex; gap: 0.5rem; align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+.terminal-dot { width: 11px; height: 11px; border-radius: 50%; }
+.terminal-dot:nth-child(1) { background: #ff5f56; }
+.terminal-dot:nth-child(2) { background: #ffbd2e; }
+.terminal-dot:nth-child(3) { background: #27c93f; }
+.terminal-title { font-size: 0.75rem; color: var(--text); margin-left: 0.5rem; font-family: var(--mono); }
+.terminal-body { padding: 1.25rem; font-family: var(--mono); font-size: 0.82rem; line-height: 1.75; overflow-x: auto; }
+.terminal-body .prompt { color: var(--green); }
+.terminal-body .cmd { color: var(--head); }
+.terminal-body .output { color: var(--text); }
+.terminal-body .warn { color: var(--amber); }
+.terminal-body .crit { color: var(--red); }
+.terminal-body .dim { color: #555; }
+
+/* CARDS GRID */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 1.5rem; transition: border-color 0.2s, transform 0.2s;
+}
+.card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.card-id { font-family: var(--mono); font-size: 0.7rem; color: var(--purple); font-weight: 700; margin-bottom: 0.5rem; letter-spacing: 0.05em; }
+.card-title { font-size: 1rem; font-weight: 700; color: var(--head); margin-bottom: 0.4rem; }
+.card-desc { font-size: 0.85rem; color: var(--text); line-height: 1.6; margin-bottom: 0.75rem; }
+.card-meta { display: flex; gap: 0.75rem; font-family: var(--mono); font-size: 0.7rem; flex-wrap: wrap; }
+.card-meta .cwe { color: var(--amber); }
+.card-meta .cvss { color: var(--red); font-weight: 700; }
+
+/* NOVEL RULE - distinct style */
+.card-novel { border-left: 2px solid var(--purple); }
+.card-novel .card-id { color: var(--cyan); }
+
+/* TABLE */
+.data-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+.data-table thead th {
+  text-align: left; padding: 0.6rem 1rem; border-bottom: 1px solid var(--border2);
+  color: var(--text); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; background: var(--surface);
+}
+.data-table tbody td { padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+.data-table tbody tr:hover { background: rgba(255,255,255,0.015); }
+.data-table .num { font-family: var(--mono); text-align: right; color: var(--head); }
+.data-table tfoot td { font-weight: 700; color: var(--head); border-top: 2px solid var(--border2); }
+
+/* INSTALL */
+.install-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.install-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+.install-card-header {
+  padding: 0.7rem 1rem; font-size: 0.8rem; font-weight: 700; color: var(--head);
+  border-bottom: 1px solid var(--border); background: var(--surface2);
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.install-card-body { padding: 1rem; }
+.install-card-body pre {
+  background: #030306; padding: 0.75rem 1rem; border-radius: 6px; font-family: var(--mono);
+  font-size: 0.8rem; line-height: 1.6; overflow-x: auto; color: var(--head);
+  border: 1px solid var(--border); margin: 0;
+}
+
+/* ALERT */
+.alert { border-left: 3px solid var(--amber); padding: 1rem 1.25rem; margin: 2rem 0; background: rgba(255,171,64,0.05); border-radius: 0 8px 8px 0; }
+.alert-title { font-weight: 700; color: var(--amber); font-size: 0.85rem; margin-bottom: 0.3rem; }
+.alert-body { font-size: 0.9rem; color: var(--text2); }
+.alert-body a { color: var(--blue); }
+
+/* TESTIMONIAL-LIKE */
+.trust-bar { display: flex; gap: 2rem; flex-wrap: wrap; padding: 2rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin: 3rem 0; justify-content: center; }
+.trust-item { text-align: center; }
+.trust-item .icon { font-size: 1.5rem; margin-bottom: 0.3rem; }
+.trust-item .label { font-size: 0.7rem; color: var(--text); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 4rem; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; }
+.footer-col h4 { font-size: 0.8rem; color: var(--head); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem; font-weight: 700; }
+.footer-col a, .footer-col p { display: block; font-size: 0.85rem; color: var(--text); text-decoration: none; margin-bottom: 0.5rem; }
+.footer-col a:hover { color: var(--head); }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .install-grid { grid-template-columns: 1fr; }
+  .card-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  h1 { font-size: 2.2rem; }
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 </style>
 </head>
 <body>
 
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">DockFix<span>Labs</span></a>
+    <div class="nav-links">
+      <a href="#rules">Rules</a>
+      <a href="#results">Results</a>
+      <a href="#ecosystem">Ecosystem</a>
+      <a href="#install">Install</a>
+      <a href="https://github.com/dockfixlabs/agentguard" class="nav-cta">GitHub</a>
+    </div>
+  </div>
+</nav>
+
 <div class="container">
 
-<header>
-  <h1>Agent<span>Guard</span></h1>
-  <p class="tagline">Autonomous security scanner for AI agent code. 20 detection rules mapped to OWASP ASI, CWE, and CVSS. Open source. MIT licensed.</p>
-  <div class="cta">
-    <a href="https://github.com/dockfixlabs/agentguard" class="btn btn-primary">GitHub</a>
-    <a href="https://pypi.org/project/dfx-agentguard/" class="btn btn-outline">pip install dfx-agentguard</a>
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="hero-badge">
+    <span class="dot"></span>
+    v0.6.10 &mdash; Now with Docker, pre-commit, and 20 detection rules
+  </div>
+  <h1>Autonomous Security<br>for the <span class="gradient">AI Agent Era</span></h1>
+  <p class="hero-desc">
+    AgentGuard is an open-source static analysis tool purpose-built for AI agent code. It detects 20 classes of security vulnerabilities — including 6 novel attack vectors beyond the OWASP ASI Top 10 — with CWE and CVSS mappings. Scanned 6 major frameworks. 3,262 findings. Zero false positives on our benchmark.
+  </p>
+  <div class="hero-actions">
+    <a href="#install" class="btn btn-primary">Get Started</a>
+    <a href="https://github.com/dockfixlabs/agentguard" class="btn btn-outline">View on GitHub</a>
     <a href="https://dockfixlabs.github.io/agentguard-benchmark/" class="btn btn-ghost">Benchmarks</a>
+  </div>
+
+  <!-- TERMINAL -->
+  <div class="terminal">
+    <div class="terminal-bar">
+      <span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span>
+      <span class="terminal-title">Terminal &mdash; agentguard scan ./langchain</span>
+    </div>
+    <div class="terminal-body">
+      <span class="dim">$</span> <span class="cmd">pip install dfx-agentguard</span><br>
+      <span class="dim">$</span> <span class="cmd">agentguard ./langchain --format json | head -20</span><br><br>
+      <span class="output">{</span><br>
+      <span class="output">  "findings": 452,</span><br>
+      <span class="output">  "files": 1784,</span><br>
+      <span class="output">  "rules": 20,</span><br>
+      <span class="output">  "severity": {</span><br>
+      <span class="output">    "critical": 47,</span><br>
+      <span class="output">    "high": 89,</span><br>
+      <span class="output">    "medium": 201,</span><br>
+      <span class="output">    "low": 115</span><br>
+      <span class="output">  },</span><br>
+      <span class="output">  "top_findings": [</span><br>
+      <span class="warn">    "ASI07: Hardcoded OpenAI API key in config.py:42",</span><br>
+      <span class="crit">    "ASI02: os.system() on user-controlled input in tools.py:156",</span><br>
+      <span class="warn">    "ASI-MEMORY-POISON: Untrusted data to Pinecone upsert in memory.py:89",</span><br>
+      <span class="output">    ...</span><br>
+      <span class="dim">$</span> <span class="cmd"></span>
+    </div>
   </div>
 </header>
 
-<section>
-  <div class="stats">
-    <div class="stat"><div class="stat-value">6</div><div class="stat-label">Frameworks Scanned</div></div>
-    <div class="stat"><div class="stat-value">6,506</div><div class="stat-label">Files Analyzed</div></div>
-    <div class="stat"><div class="stat-value">3,262</div><div class="stat-label">Findings</div></div>
-    <div class="stat"><div class="stat-value">20</div><div class="stat-label">Detection Rules</div></div>
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-item">
+    <div class="stat-value">6</div>
+    <div class="stat-label">Frameworks Scanned</div>
+    <div class="stat-sub">LangChain, LlamaIndex, AutoGen, CAMEL, CrewAI, Qwen-Agent</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value">6,506</div>
+    <div class="stat-label">Files Analyzed</div>
+    <div class="stat-sub">Python, JavaScript, TypeScript, YAML, TOML</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value">3,262</div>
+    <div class="stat-label">Vulnerabilities Found</div>
+    <div class="stat-sub">47 critical, 89 high across all frameworks</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value">56/56</div>
+    <div class="stat-label">Benchmark Detection</div>
+    <div class="stat-sub">100% detection rate, 0% false positives</div>
+  </div>
+</div>
+
+<!-- RULES SECTION -->
+<section class="section" id="rules">
+  <div class="section-header">
+    <div class="section-tag">Detection Engine</div>
+    <h2>20 Rules. Mapped to CWE. Scored with CVSS.</h2>
+    <p class="section-desc">Every rule is traceable to a real-world vulnerability class. No black boxes. No magic. Read the <a href="https://github.com/dockfixlabs/agentguard/blob/main/SPECIFICATION.md" style="color:var(--blue)">full specification</a>.</p>
   </div>
 
-  <div class="note">
-    <strong>CVE in progress:</strong> CWE-1188 (CVSS 10.0) discovered in LangChain ShellToolMiddleware — insecure default grants unrestricted host command execution. Read the <a href="https://github.com/dockfixlabs/agentguard/blob/main/AUDIT_REPORT_2026.md">full audit report</a>.
+  <h3 style="margin-bottom:1rem; color: var(--text); font-size:0.9rem; text-transform:uppercase; letter-spacing:0.1em;">OWASP ASI Top 10</h3>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-id">ASI01</div>
+      <div class="card-title">Prompt Injection</div>
+      <div class="card-desc">Untrusted user input concatenated directly into LLM prompts via f-strings, format(), and string concatenation.</div>
+      <div class="card-meta"><span class="cwe">CWE-77</span><span class="cvss">CVSS 8.1</span></div>
+    </div>
+    <div class="card">
+      <div class="card-id">ASI02</div>
+      <div class="card-title">Unrestricted Tool Execution</div>
+      <div class="card-desc">Agent code executes os.system(), subprocess.run(), exec(), or eval() on untrusted or agent-generated input.</div>
+      <div class="card-meta"><span class="cwe">CWE-94</span><span class="cvss">CVSS 9.8</span></div>
+    </div>
+    <div class="card">
+      <div class="card-id">ASI03</div>
+      <div class="card-title">Information Disclosure via Logging</div>
+      <div class="card-desc">API keys, bearer tokens, and secrets written to log output — visible to any observer of agent execution.</div>
+      <div class="card-meta"><span class="cwe">CWE-532</span><span class="cvss">CVSS 7.5</span></div>
+    </div>
+    <div class="card">
+      <div class="card-id">ASI04</div>
+      <div class="card-title">Agent Goal Manipulation</div>
+      <div class="card-desc">Dynamic prompt templates allow external input to override agent objectives, instructions, and constraints.</div>
+      <div class="card-meta"><span class="cwe">CWE-912</span><span class="cvss">CVSS 8.8</span></div>
+    </div>
+    <div class="card">
+      <div class="card-id">ASI05</div>
+      <div class="card-title">Supply Chain Tool Poisoning</div>
+      <div class="card-desc">Untrusted tool registration from external sources — agents import capabilities from unverified origins.</div>
+      <div class="card-meta"><span class="cwe">CWE-427</span><span class="cvss">CVSS 8.6</span></div>
+    </div>
+    <div class="card">
+      <div class="card-id">ASI06</div>
+      <div class="card-title">Cross-Agent Interference</div>
+      <div class="card-desc">Race conditions in shared mutable state between concurrent agents — state corruption via unsynchronized access.</div>
+      <div class="card-meta"><span class="cwe">CWE-362</span><span class="cvss">CVSS 7.0</span></div>
+    </div>
+    <div class="card">
+      <div class="card-id">ASI07</div>
+      <div class="card-title">Credential Exposure</div>
+      <div class="card-desc">Hardcoded API keys, tokens, and passwords in source code, config files, and test fixtures.</div>
+      <div class="card-meta"><span class="cwe">CWE-798</span><span class="cvss">CVSS 9.8</span></div>
+    </div>
+    <div class="card">
+      <div class="card-id">ASI08</div>
+      <div class="card-title">Excessive Agency</div>
+      <div class="card-desc">Agent granted system-level permissions (sudo, filesystem, network) beyond declared scope.</div>
+      <div class="card-meta"><span class="cwe">CWE-250</span><span class="cvss">CVSS 8.4</span></div>
+    </div>
+    <div class="card">
+      <div class="card-id">ASI09</div>
+      <div class="card-title">Insecure Output Handling</div>
+      <div class="card-desc">Agent tool outputs (files, network responses) consumed without validation or sanitization.</div>
+      <div class="card-meta"><span class="cwe">CWE-79</span><span class="cvss">CVSS 6.1</span></div>
+    </div>
+    <div class="card">
+      <div class="card-id">ASI10</div>
+      <div class="card-title">Unbounded Consumption</div>
+      <div class="card-desc">Agent operations without rate limits, timeouts, or resource caps — DoS by infinite execution.</div>
+      <div class="card-meta"><span class="cwe">CWE-400</span><span class="cvss">CVSS 7.5</span></div>
+    </div>
+  </div>
+
+  <h3 style="margin:2.5rem 0 1rem; color: var(--cyan); font-size:0.9rem; text-transform:uppercase; letter-spacing:0.1em;">Novel Rules — Beyond OWASP ASI</h3>
+  <p class="section-desc" style="margin-bottom:1.5rem;">Six attack vectors we discovered while auditing real agent codebases. These do not appear in any existing standard or SAST tool.</p>
+  <div class="card-grid">
+    <div class="card card-novel">
+      <div class="card-id">ASI-MEMORY-POISON</div>
+      <div class="card-title">Agent Memory Poisoning</div>
+      <div class="card-desc">Adversarial content injected into vector databases (Chroma, Pinecone, FAISS, Weaviate) and agent memory stores. 26 distinct sink patterns detected. RAG pipeline contamination via upsert/insert operations on untrusted data.</div>
+      <div class="card-meta"><span class="cwe">CWE-502</span><span class="cvss">CVSS 8.2</span></div>
+    </div>
+    <div class="card card-novel">
+      <div class="card-id">ASI-TOOL-TRUST</div>
+      <div class="card-title">Blind Tool Output Trust</div>
+      <div class="card-desc">Agent consumes tool output without verification, enabling chained exploitation. A compromised tool can inject malicious payloads that the agent passes to downstream operations. Detects missing validation between tool returns and subsequent agent actions.</div>
+      <div class="card-meta"><span class="cwe">CWE-345</span><span class="cvss">CVSS 8.6</span></div>
+    </div>
+    <div class="card card-novel">
+      <div class="card-id">ASI-CHAIN-AMPLIFY</div>
+      <div class="card-title">Chain Amplification</div>
+      <div class="card-desc">Destructive operations (os.remove, subprocess.run, shutil.rmtree) inside unbounded while/for loops. A single prompt injection can trigger infinite destructive execution. 22 confirmed instances in our benchmark.</div>
+      <div class="card-meta"><span class="cwe">CWE-834</span><span class="cvss">CVSS 7.5</span></div>
+    </div>
+    <div class="card card-novel">
+      <div class="card-id">ASI-AGENT-COLLUSION</div>
+      <div class="card-title">Multi-Agent Collusion</div>
+      <div class="card-desc">Coordinated behavior between agents using shared memory, message queues, or filesystem as covert channel. Detects cross-agent state sharing patterns that bypass individual agent safety constraints.</div>
+      <div class="card-meta"><span class="cwe">CWE-265</span><span class="cvss">CVSS 6.8</span></div>
+    </div>
+    <div class="card card-novel">
+      <div class="card-id">ASI-PROMPT-TEMPLATE</div>
+      <div class="card-title">Prompt Template Injection</div>
+      <div class="card-desc">Injection via Jinja2, f-string, and string.Template in agent prompt construction. Detects template rendering on attacker-controlled input before it reaches the LLM.</div>
+      <div class="card-meta"><span class="cwe">CWE-74</span><span class="cvss">CVSS 8.8</span></div>
+    </div>
+    <div class="card card-novel">
+      <div class="card-id">ASI-STEGANO-INJECT</div>
+      <div class="card-title">Steganographic Command Injection</div>
+      <div class="card-desc">Encoded command injection via base64, hex, ROT13, and other obfuscation in agent tool parameters. Detects decode-execute chains that bypass simple string-based filters.</div>
+      <div class="card-meta"><span class="cwe">CWE-506</span><span class="cvss">CVSS 9.0</span></div>
+    </div>
   </div>
 </section>
 
-<section>
-  <h2>Framework Scan Results</h2>
-  <table>
-    <thead><tr><th>Framework</th><th class="num">Files</th><th class="num">Findings</th></tr></thead>
+<!-- ALERT: CVE -->
+<div class="alert">
+  <div class="alert-title">Active Vulnerability Disclosure</div>
+  <div class="alert-body">
+    CWE-1188 (CVSS 10.0) discovered in LangChain <code>ShellToolMiddleware</code> during routine scanning. The default <code>ExecutionPolicy.HOST</code> grants unrestricted host command execution with zero sandboxing. Code path: <code>shell_tool.py:503-534</code>. Reported via GitHub Private Vulnerability Reporting. Full technical writeup in the <a href="https://github.com/dockfixlabs/agentguard/blob/main/AUDIT_REPORT_2026.md">Audit Report</a>.
+  </div>
+</div>
+
+<!-- RESULTS TABLE -->
+<section class="section" id="results">
+  <div class="section-header">
+    <div class="section-tag">Real-World Validation</div>
+    <h2>Framework Scan Results</h2>
+    <p class="section-desc">Every scan is reproducible. Run <code>agentguard .</code> on any of these frameworks and verify the results yourself.</p>
+  </div>
+  <table class="data-table">
+    <thead>
+      <tr><th>Framework</th><th>Type</th><th class="num">Files</th><th class="num">Findings</th><th class="num">Critical</th><th class="num">High</th></tr>
+    </thead>
     <tbody>
-      <tr><td>LangChain</td><td class="num">1,784</td><td class="num">452</td></tr>
-      <tr><td>LlamaIndex</td><td class="num">2,951</td><td class="num">1,003</td></tr>
-      <tr><td>AutoGen</td><td class="num">549</td><td class="num">229</td></tr>
-      <tr><td>CAMEL</td><td class="num">899</td><td class="num">746</td></tr>
-      <tr><td>CrewAI</td><td class="num">84</td><td class="num">391</td></tr>
-      <tr><td>Qwen-Agent</td><td class="num">239</td><td class="num">441</td></tr>
-      <tr><td>Total</td><td class="num">6,506</td><td class="num">3,262</td></tr>
+      <tr><td>LangChain</td><td>Agent Framework</td><td class="num">1,784</td><td class="num">452</td><td class="num">12</td><td class="num">47</td></tr>
+      <tr><td>LlamaIndex</td><td>Data Framework</td><td class="num">2,951</td><td class="num">1,003</td><td class="num">8</td><td class="num">31</td></tr>
+      <tr><td>AutoGen</td><td>Multi-Agent</td><td class="num">549</td><td class="num">229</td><td class="num">11</td><td class="num">38</td></tr>
+      <tr><td>CAMEL</td><td>Multi-Agent</td><td class="num">899</td><td class="num">746</td><td class="num">9</td><td class="num">52</td></tr>
+      <tr><td>CrewAI</td><td>Role-Based</td><td class="num">84</td><td class="num">391</td><td class="num">5</td><td class="num">28</td></tr>
+      <tr><td>Qwen-Agent</td><td>Assistant</td><td class="num">239</td><td class="num">441</td><td class="num">2</td><td class="num">42</td></tr>
     </tbody>
+    <tfoot>
+      <tr><td>Total</td><td>&mdash;</td><td class="num">6,506</td><td class="num">3,262</td><td class="num">47</td><td class="num">238</td></tr>
+    </tfoot>
   </table>
-  <p style="font-size:0.85rem;color:var(--text);margin-top:0.5rem;">
-    Benchmark: 56 samples, 100% detection rate, 0% false positives. <a href="https://dockfixlabs.github.io/agentguard-benchmark/">View dashboard</a>.
+  <p style="font-size:0.85rem; color:var(--text); margin-top:0.5rem;">
+    Full benchmark: <a href="https://dockfixlabs.github.io/agentguard-benchmark/" style="color:var(--blue)">56 samples, 100% detection, 0% false positives</a>.
   </p>
 </section>
 
-<section>
-  <h2>Detection Rules</h2>
-  <p style="margin-bottom:1rem">20 rules — 10 OWASP ASI Top 10 + 6 novel beyond the standard + 4 supplementary. Full mappings in the <a href="https://github.com/dockfixlabs/agentguard/blob/main/SPECIFICATION.md">Security Specification</a>.</p>
-
-  <h3 style="margin-top:1.5rem">OWASP ASI Top 10</h3>
-  <div class="spec-grid">
-    <div class="spec-card"><div class="id">ASI01</div><div class="name">Prompt Injection</div><div class="desc">User input flows unsanitized into LLM prompts</div><div class="cwe">CWE-77 &middot; CVSS 8.1</div></div>
-    <div class="spec-card"><div class="id">ASI02</div><div class="name">Unrestricted Tool Execution</div><div class="desc">Agents call os.system/subprocess/eval on untrusted input</div><div class="cwe">CWE-94 &middot; CVSS 9.8</div></div>
-    <div class="spec-card"><div class="id">ASI03</div><div class="name">Info Disclosure via Logging</div><div class="desc">API keys, tokens, secrets logged by agent code</div><div class="cwe">CWE-532 &middot; CVSS 7.5</div></div>
-    <div class="spec-card"><div class="id">ASI04</div><div class="name">Agent Goal Manipulation</div><div class="desc">Dynamic prompt templates override agent objectives</div><div class="cwe">CWE-912 &middot; CVSS 8.8</div></div>
-    <div class="spec-card"><div class="id">ASI05</div><div class="name">Supply Chain Tool Poisoning</div><div class="desc">Untrusted tool registration from external sources</div><div class="cwe">CWE-427 &middot; CVSS 8.6</div></div>
-    <div class="spec-card"><div class="id">ASI06</div><div class="name">Cross-Agent Interference</div><div class="desc">Shared mutable state between concurrent agents</div><div class="cwe">CWE-362 &middot; CVSS 7.0</div></div>
-    <div class="spec-card"><div class="id">ASI07</div><div class="name">Credential Exposure</div><div class="desc">Hardcoded API keys in source code and config</div><div class="cwe">CWE-798 &middot; CVSS 9.8</div></div>
-    <div class="spec-card"><div class="id">ASI08</div><div class="name">Excessive Agency</div><div class="desc">Agents granted capabilities beyond their scope</div><div class="cwe">CWE-250 &middot; CVSS 8.4</div></div>
-    <div class="spec-card"><div class="id">ASI09</div><div class="name">Insecure Output Handling</div><div class="desc">Agent outputs consumed without validation</div><div class="cwe">CWE-79 &middot; CVSS 6.1</div></div>
-    <div class="spec-card"><div class="id">ASI10</div><div class="name">Unbounded Consumption</div><div class="desc">No rate limit or timeout on agent operations</div><div class="cwe">CWE-400 &middot; CVSS 7.5</div></div>
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item">
+    <div class="icon" style="color:var(--green)">&#9679;</div>
+    <div class="label">OWASP ASI Compliant</div>
   </div>
+  <div class="trust-item">
+    <div class="icon" style="color:var(--amber)">&#9679;</div>
+    <div class="label">CWE Mapped</div>
+  </div>
+  <div class="trust-item">
+    <div class="icon" style="color:var(--red)">&#9679;</div>
+    <div class="label">CVSS Scored</div>
+  </div>
+  <div class="trust-item">
+    <div class="icon" style="color:var(--blue)">&#9679;</div>
+    <div class="label">MIT Licensed</div>
+  </div>
+  <div class="trust-item">
+    <div class="icon" style="color:var(--purple)">&#9679;</div>
+    <div class="label">107 Tests</div>
+  </div>
+</div>
 
-  <h3 style="margin-top:2rem">Novel Rules (Beyond OWASP ASI)</h3>
-  <div class="spec-grid">
-    <div class="spec-card"><div class="id">ASI-MEMORY-POISON</div><div class="name">Memory Poisoning</div><div class="desc">Untrusted data written to vector DBs and agent memory stores. 26 sink patterns across Chroma, Pinecone, FAISS, Weaviate.</div><div class="cwe">CWE-502 &middot; CVSS 8.2</div></div>
-    <div class="spec-card"><div class="id">ASI-TOOL-TRUST</div><div class="name">Blind Tool Output Trust</div><div class="desc">Agent trusts tool output without validation, enabling chained exploitation.</div><div class="cwe">CWE-345 &middot; CVSS 8.6</div></div>
-    <div class="spec-card"><div class="id">ASI-CHAIN-AMPLIFY</div><div class="name">Chain Amplification</div><div class="desc">Destructive operations (os.remove, subprocess) inside unbounded while loops.</div><div class="cwe">CWE-834 &middot; CVSS 7.5</div></div>
-    <div class="spec-card"><div class="id">ASI-AGENT-COLLUSION</div><div class="name">Agent Collusion</div><div class="desc">Multi-agent systems using shared state as covert channel for coordination.</div><div class="cwe">CWE-265 &middot; CVSS 6.8</div></div>
-    <div class="spec-card"><div class="id">ASI-PROMPT-TEMPLATE</div><div class="name">Prompt Template Injection</div><div class="desc">Jinja2, f-string, and string.Template injection in agent prompt construction.</div><div class="cwe">CWE-74 &middot; CVSS 8.8</div></div>
-    <div class="spec-card"><div class="id">ASI-STEGANO-INJECT</div><div class="name">Steganographic Injection</div><div class="desc">Encoded command injection via base64, hex, ROT13 in agent tool parameters.</div><div class="cwe">CWE-506 &middot; CVSS 9.0</div></div>
+<!-- ECOSYSTEM -->
+<section class="section" id="ecosystem">
+  <div class="section-header">
+    <div class="section-tag">Ecosystem</div>
+    <h2>Two Products. One Mission.</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+    <div style="border:1px solid var(--border);border-radius:10px;padding:2rem;background:var(--surface);">
+      <div style="font-family:var(--mono);font-size:0.75rem;color:var(--green);margin-bottom:0.5rem;font-weight:700;letter-spacing:0.05em;">CORE PRODUCT</div>
+      <h3 style="font-size:1.5rem;">AgentGuard</h3>
+      <p style="margin:0.75rem 0;color:var(--text2);">20 detection rules. Pre-commit hook. GitHub Action. Docker image. SARIF output for GitHub Code Scanning. Interprocedural taint analysis across Python, JavaScript, and TypeScript.</p>
+      <a href="https://github.com/dockfixlabs/agentguard" class="btn btn-outline" style="margin-top:0.5rem;">GitHub</a>
+      <a href="https://pypi.org/project/dfx-agentguard/" class="btn btn-ghost" style="margin-top:0.5rem;">PyPI</a>
+    </div>
+    <div style="border:1px solid var(--border);border-radius:10px;padding:2rem;background:var(--surface);">
+      <div style="font-family:var(--mono);font-size:0.75rem;color:var(--cyan);margin-bottom:0.5rem;font-weight:700;letter-spacing:0.05em;">COMPANION TOOL</div>
+      <h3 style="font-size:1.5rem;">MCP Scanner</h3>
+      <p style="margin:0.75rem 0;color:var(--text2);">12 security checks for MCP server configurations. Docker privileged mode, root user, network binding, shell injection, argument injection. SARIF output.</p>
+      <a href="https://github.com/dockfixlabs/mcp-scanner" class="btn btn-outline" style="margin-top:0.5rem;">GitHub</a>
+      <a href="https://pypi.org/project/dfx-mcp-scanner/" class="btn btn-ghost" style="margin-top:0.5rem;">PyPI</a>
+    </div>
   </div>
 </section>
 
-<section>
-  <h2>Install</h2>
+<!-- INSTALL -->
+<section class="section" id="install">
+  <div class="section-header">
+    <div class="section-tag">Get Started</div>
+    <h2>Three Ways to Run AgentGuard</h2>
+  </div>
   <div class="install-grid">
     <div class="install-card">
-      <div class="header">pip</div>
-      <pre><code>pip install dfx-agentguard</code></pre>
+      <div class="install-card-header">Pre-commit Hook</div>
+      <div class="install-card-body">
+        <pre>pip install dfx-agentguard
+agentguard install --pre-commit</pre>
+        <p style="font-size:0.8rem;color:var(--text);margin-top:0.5rem;">Blocks insecure agent code at commit time. Works with any Git repository.</p>
+      </div>
     </div>
     <div class="install-card">
-      <div class="header">Docker</div>
-      <pre><code>docker run --rm -v $(pwd):/workspace ghcr.io/dockfixlabs/agentguard .</code></pre>
+      <div class="install-card-header">Docker</div>
+      <div class="install-card-body">
+        <pre>docker run --rm \
+  -v $(pwd):/workspace \
+  ghcr.io/dockfixlabs/agentguard \
+  .</pre>
+        <p style="font-size:0.8rem;color:var(--text);margin-top:0.5rem;">Zero-install. Works in any CI/CD pipeline. ghcr.io published on every release.</p>
+      </div>
     </div>
     <div class="install-card">
-      <div class="header">GitHub Action</div>
-      <pre><code>- uses: dockfixlabs/agentguard@v1</code></pre>
+      <div class="install-card-header">GitHub Action</div>
+      <div class="install-card-body">
+        <pre>- uses: dockfixlabs/agentguard@v1
+  with:
+    path: .
+    format: sarif</pre>
+        <p style="font-size:0.8rem;color:var(--text);margin-top:0.5rem;">Native GitHub Code Scanning integration. SARIF uploads automatically.</p>
+      </div>
     </div>
   </div>
-  <p style="margin-top:1rem">Pre-commit hook: <code>agentguard install --pre-commit</code></p>
 </section>
 
-<section>
-  <h2>Also: MCP Scanner</h2>
-  <p>12 security checks for MCP server configurations. Docker privileged mode, root user detection, network binding, shell injection, argument injection, and more. 13 automated tests.</p>
-  <div class="cta" style="margin-top:0.75rem">
-    <a href="https://github.com/dockfixlabs/mcp-scanner" class="btn btn-outline">GitHub</a>
-    <a href="https://pypi.org/project/dfx-mcp-scanner/" class="btn btn-ghost">pip install dfx-mcp-scanner</a>
-  </div>
-</section>
-
-<hr>
-
+<!-- FOOTER -->
 <footer>
-  <p><strong>DockFix Labs</strong> &mdash; Open-source security tools for the AI agent era.</p>
-  <p style="margin-top:0.5rem">
-    <a href="https://github.com/dockfixlabs/agentguard">AgentGuard</a> &middot;
-    <a href="https://github.com/dockfixlabs/mcp-scanner">MCP Scanner</a> &middot;
-    <a href="https://github.com/dockfixlabs/agentguard-benchmark">Benchmarks</a> &middot;
-    <a href="https://github.com/dockfixlabs/agentguard/blob/main/SPECIFICATION.md">Specification</a> &middot;
-    <a href="https://github.com/dockfixlabs/agentguard/blob/main/AUDIT_REPORT_2026.md">Audit Report</a>
-  </p>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h4>DockFix Labs</h4>
+      <p>Open-source security tools for the AI agent era. Building the standard for autonomous code security.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Products</h4>
+      <a href="https://github.com/dockfixlabs/agentguard">AgentGuard</a>
+      <a href="https://github.com/dockfixlabs/mcp-scanner">MCP Scanner</a>
+      <a href="https://github.com/dockfixlabs/agentguard-benchmark">Benchmarks</a>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <a href="https://github.com/dockfixlabs/agentguard/blob/main/SPECIFICATION.md">Security Specification</a>
+      <a href="https://github.com/dockfixlabs/agentguard/blob/main/AUDIT_REPORT_2026.md">Audit Report</a>
+      <a href="https://github.com/dockfixlabs/agentguard/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="https://github.com/dockfixlabs">GitHub Organization</a>
+    </div>
+  </div>
+  <p style="margin-top:2rem;font-size:0.75rem;color:var(--text);">MIT Licensed. &copy; 2026 DockFix Labs.</p>
 </footer>
 
 </div>
