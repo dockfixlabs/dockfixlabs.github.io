@@ -55,6 +55,8 @@ h2{font-size:1.5rem;font-weight:700;color:var(--head);margin-bottom:1rem}
 
 .badge-crit{background:rgba(255,82,82,0.15);color:var(--red);padding:0.15rem 0.5rem;border-radius:4px;font-size:0.75rem;font-weight:700}
 .badge-high{background:rgba(255,171,64,0.15);color:var(--amber);padding:0.15rem 0.5rem;border-radius:4px;font-size:0.75rem;font-weight:700}
+.trust-bar{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;padding:1.5rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.trust-item{text-align:center}.trust-item .label{font-size:0.65rem;color:var(--text);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-top:0.3rem}
 
 /* CARDS */
 .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
@@ -193,6 +195,43 @@ footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:3rem;text-al
       <p>Agent memory writes that modify execution constraints, tool access, or governance state without authorization.</p>
       <span class="tag tag-purple">CWE-863</span><span class="tag tag-green">CVSS 7.8</span>
     </div>
+  </div>
+</section>
+
+<!-- SECURITY AUDIT SERVICES -->
+<section class="section">
+  <h2>Security Audit Services</h2>
+  <p class="section-desc">Get a comprehensive security audit of your AI agent codebase by the team that discovered 6,173 vulnerabilities across 10 frameworks.</p>
+  
+  <div class="card-grid">
+    <div class="card" style="border-left:3px solid var(--cyan)">
+      <h3>Agent Code Audit</h3>
+      <p style="font-size:0.85rem;color:var(--text);margin-bottom:0.75rem">Full static analysis of your AI agent codebase with AgentGuard v0.7.0. Covers all 22 detection rules including 6 novel attack vectors beyond OWASP ASI.</p>
+      <p style="font-size:0.8rem;color:var(--head);font-weight:700;margin-bottom:0.5rem">Deliverables</p>
+      <p style="font-size:0.8rem;color:var(--text)">Detailed finding report with CWE/CVSS mappings, remediation guide, SARIF output for GitHub Code Scanning integration.</p>
+      <a href="mailto:security@dockfixlabs.dev" class="btn btn-outline" style="margin-top:0.75rem">Inquire</a>
+    </div>
+    <div class="card" style="border-left:3px solid var(--purple)">
+      <h3>MCP Server Audit</h3>
+      <p style="font-size:0.85rem;color:var(--text);margin-bottom:0.75rem">12-point security check of your MCP server configuration. Docker security, privileged mode, root user, network binding, and injection risks.</p>
+      <p style="font-size:0.8rem;color:var(--head);font-weight:700;margin-bottom:0.5rem">Deliverables</p>
+      <p style="font-size:0.8rem;color:var(--text)">Per-server findings report, severity-ranked issues, Dockerfile analysis, configuration hardening guide.</p>
+      <a href="mailto:security@dockfixlabs.dev" class="btn btn-outline" style="margin-top:0.75rem">Inquire</a>
+    </div>
+    <div class="card" style="border-left:3px solid var(--green)">
+      <h3>Enterprise Retainer</h3>
+      <p style="font-size:0.85rem;color:var(--text);margin-bottom:0.75rem">Ongoing security monitoring for your AI agent infrastructure. Quarterly audits, CVE monitoring, regression detection, and priority support.</p>
+      <p style="font-size:0.8rem;color:var(--head);font-weight:700;margin-bottom:0.5rem">Includes</p>
+      <p style="font-size:0.8rem;color:var(--text)">Unlimited scans, private rule customization, SLA-backed response times, CVE disclosure management, compliance reporting.</p>
+      <a href="mailto:security@dockfixlabs.dev" class="btn btn-outline" style="margin-top:0.75rem">Inquire</a>
+    </div>
+  </div>
+  
+  <div class="trust-bar" style="margin-top:2rem">
+    <div class="trust-item"><div class="icon" style="font-size:1.8rem">10</div><div class="label">Frameworks Audited</div></div>
+    <div class="trust-item"><div class="icon" style="font-size:1.8rem">6,173</div><div class="label">Findings Discovered</div></div>
+    <div class="trust-item"><div class="icon" style="font-size:1.8rem">3</div><div class="label">Active CVE Submissions</div></div>
+    <div class="trust-item"><div class="icon" style="font-size:1.8rem">CVSS 10.0</div><div class="label">Highest Severity Found</div></div>
   </div>
 </section>
 
