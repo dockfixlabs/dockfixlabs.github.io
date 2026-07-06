@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AgentGuard — Autonomous Security for AI Agent Code | DockFix Labs</title>
-<meta name="description" content="AgentGuard: OWASP ASI Top 10 compliant security scanner. 20 detection rules with CWE/CVSS mappings. Scanned 6 frameworks, 6,506 files, 3,262 findings. MIT licensed.">
+<meta name="description" content="AgentGuard: OWASP ASI Top 10 compliant security scanner. 22 detection rules with CWE/CVSS mappings. Scanned 9 frameworks, 11,036 files, 6,173 findings. MIT licensed.">
 <meta property="og:title" content="AgentGuard — Autonomous Security for AI Agent Code">
-<meta property="og:description" content="20 detection rules. 6 frameworks scanned. 3,262 findings. 0% false positives. OWASP ASI compliant. MIT licensed.">
+<meta property="og:description" content="22 detection rules. 9 frameworks scanned. 6,173 findings. 0% false positives. OWASP ASI compliant. MIT licensed.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <style>
@@ -221,11 +221,11 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 4rem;
 <header class="hero" id="top">
   <div class="hero-badge">
     <span class="dot"></span>
-    v0.6.10 &mdash; Now with Docker, pre-commit, and 20 detection rules
+    v0.7.0 &mdash; Now with Docker, pre-commit, SARIF, and 22 detection rules
   </div>
   <h1>Autonomous Security<br>for the <span class="gradient">AI Agent Era</span></h1>
   <p class="hero-desc">
-    AgentGuard is an open-source static analysis tool purpose-built for AI agent code. It detects 20 classes of security vulnerabilities — including 6 novel attack vectors beyond the OWASP ASI Top 10 — with CWE and CVSS mappings. Scanned 6 major frameworks. 3,262 findings. Zero false positives on our benchmark.
+    AgentGuard is an open-source static analysis tool purpose-built for AI agent code. It detects 22 classes of security vulnerabilities — including 6 novel attack vectors beyond the OWASP ASI Top 10 — with CWE and CVSS mappings. Scanned 9 major frameworks. 6,173 findings. Zero false positives on our benchmark.
   </p>
   <div class="hero-actions">
     <a href="#install" class="btn btn-primary">Get Started</a>
@@ -245,7 +245,7 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 4rem;
       <span class="output">{</span><br>
       <span class="output">  "findings": 452,</span><br>
       <span class="output">  "files": 1784,</span><br>
-      <span class="output">  "rules": 20,</span><br>
+      <span class="output">  "rules": 22,</span><br>
       <span class="output">  "severity": {</span><br>
       <span class="output">    "critical": 47,</span><br>
       <span class="output">    "high": 89,</span><br>
@@ -265,17 +265,17 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 4rem;
 <!-- STATS -->
 <div class="stats-row">
   <div class="stat-item">
-    <div class="stat-value">6</div>
+    <div class="stat-value">9</div>
     <div class="stat-label">Frameworks Scanned</div>
-    <div class="stat-sub">LangChain, LlamaIndex, AutoGen, CAMEL, CrewAI, Qwen-Agent</div>
+    <div class="stat-sub">LangChain, LlamaIndex, AutoGen, CAMEL, CrewAI, Qwen-Agent, Semantic Kernel, Haystack, Dify, OpenAI Agents SDK</div>
   </div>
   <div class="stat-item">
-    <div class="stat-value">6,506</div>
+    <div class="stat-value">11,036</div>
     <div class="stat-label">Files Analyzed</div>
     <div class="stat-sub">Python, JavaScript, TypeScript, YAML, TOML</div>
   </div>
   <div class="stat-item">
-    <div class="stat-value">3,262</div>
+    <div class="stat-value">6,173</div>
     <div class="stat-label">Vulnerabilities Found</div>
     <div class="stat-sub">47 critical, 89 high across all frameworks</div>
   </div>
@@ -290,7 +290,7 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 4rem;
 <section class="section" id="rules">
   <div class="section-header">
     <div class="section-tag">Detection Engine</div>
-    <h2>20 Rules. Mapped to CWE. Scored with CVSS.</h2>
+    <h2>22 Rules. Mapped to CWE. Scored with CVSS.</h2>
     <p class="section-desc">Every rule is traceable to a real-world vulnerability class. No black boxes. No magic. Read the <a href="https://github.com/dockfixlabs/agentguard/blob/main/SPECIFICATION.md" style="color:var(--blue)">full specification</a>.</p>
   </div>
 
@@ -426,9 +426,13 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 4rem;
       <tr><td>CAMEL</td><td>Multi-Agent</td><td class="num">899</td><td class="num">746</td><td class="num">9</td><td class="num">52</td></tr>
       <tr><td>CrewAI</td><td>Role-Based</td><td class="num">84</td><td class="num">391</td><td class="num">5</td><td class="num">28</td></tr>
       <tr><td>Qwen-Agent</td><td>Assistant</td><td class="num">239</td><td class="num">441</td><td class="num">2</td><td class="num">42</td></tr>
+      <tr><td>Semantic Kernel</td><td>Agent SDK</td><td class="num">561</td><td class="num">282</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr>
+      <tr><td>Haystack</td><td>LLM Pipeline</td><td class="num">1,540</td><td class="num">209</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr>
+      <tr><td>Dify</td><td>LLM Platform</td><td class="num">1,886</td><td class="num">1,725</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr>
+      <tr><td>OpenAI Agents SDK</td><td>Agent SDK</td><td class="num">543</td><td class="num">695</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr>
     </tbody>
     <tfoot>
-      <tr><td>Total</td><td>&mdash;</td><td class="num">6,506</td><td class="num">3,262</td><td class="num">47</td><td class="num">238</td></tr>
+      <tr><td>Total</td><td>&mdash;</td><td class="num">11,036</td><td class="num">6,173</td><td class="num">47</td><td class="num">238</td></tr>
     </tfoot>
   </table>
   <p style="font-size:0.85rem; color:var(--text); margin-top:0.5rem;">
@@ -470,7 +474,7 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 4rem;
     <div style="border:1px solid var(--border);border-radius:10px;padding:2rem;background:var(--surface);">
       <div style="font-family:var(--mono);font-size:0.75rem;color:var(--green);margin-bottom:0.5rem;font-weight:700;letter-spacing:0.05em;">CORE PRODUCT</div>
       <h3 style="font-size:1.5rem;">AgentGuard</h3>
-      <p style="margin:0.75rem 0;color:var(--text2);">20 detection rules. Pre-commit hook. GitHub Action. Docker image. SARIF output for GitHub Code Scanning. Interprocedural taint analysis across Python, JavaScript, and TypeScript.</p>
+      <p style="margin:0.75rem 0;color:var(--text2);">22 detection rules. Pre-commit hook. GitHub Action. Docker image. SARIF output for GitHub Code Scanning. Interprocedural taint analysis across Python, JavaScript, and TypeScript.</p>
       <a href="https://github.com/dockfixlabs/agentguard" class="btn btn-outline" style="margin-top:0.5rem;">GitHub</a>
       <a href="https://pypi.org/project/dfx-agentguard/" class="btn btn-ghost" style="margin-top:0.5rem;">PyPI</a>
     </div>
