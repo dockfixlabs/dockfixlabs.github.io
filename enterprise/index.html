@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgentGuard Enterprise — DockFix Labs</title>
+<meta name="description" content="AgentGuard Enterprise Dashboard — AI Agent Security at Scale. 6,173 findings across 10 frameworks. Monitor, track, and secure your AI agent codebase.">
+<style>
+:root {
+  --bg:#05050a;--surface:#0a0a14;--surface2:#0f0f1c;--border:#1a1a30;--border2:#252545;
+  --text:#8892a4;--head:#e8eaed;--green:#00e676;--red:#ff5252;--amber:#ffab40;
+  --blue:#448aff;--purple:#b388ff;--cyan:#00e5ff;--mono:'JetBrains Mono','Fira Code',monospace;
+  --sans:system-ui,-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.01) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.01) 1px,transparent 1px);background-size:50px 50px}
+.container{max-width:1200px;margin:0 auto;padding:0 1.5rem;position:relative;z-index:1}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(5,5,10,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0.6rem 0}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:var(--mono);font-weight:800;font-size:1rem;color:var(--head);text-decoration:none}
+.nav-logo span{color:var(--green)}
+.nav-cta{background:var(--green);color:#000;padding:0.4rem 1rem;border-radius:6px;font-size:0.8rem;font-weight:700;text-decoration:none}
+
+/* HERO */
+.hero{padding:7rem 0 3rem;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:var(--surface2);border:1px solid var(--border2);border-radius:50px;padding:0.3rem 0.9rem;font-size:0.8rem;margin-bottom:1.5rem}
+.hero-badge .dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+h1{font-size:clamp(2rem,4vw,3.2rem);font-weight:800;color:var(--head);line-height:1.15;margin-bottom:1rem}
+h1 .green{background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1.1rem;color:var(--text);max-width:700px;margin:0 auto 2rem;line-height:1.8}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin:2rem 0}
+.stat{padding:1.5rem;text-align:center;background:var(--surface)}
+.stat-val{font-size:2rem;font-weight:800;color:var(--head);font-family:var(--mono)}
+.stat-label{font-size:0.7rem;color:var(--text);text-transform:uppercase;letter-spacing:0.1em;margin-top:0.3rem;font-weight:600}
+.stat-sub{font-size:0.65rem;color:var(--green);margin-top:0.2rem}
+
+/* SECTION */
+.section{padding:3rem 0}
+h2{font-size:1.5rem;font-weight:700;color:var(--head);margin-bottom:1rem}
+.section-desc{color:var(--text);max-width:600px;margin-bottom:2rem}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.85rem}
+.data-table th{text-align:left;padding:0.6rem 0.8rem;border-bottom:1px solid var(--border2);color:var(--text);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;font-weight:700;background:var(--surface)}
+.data-table td{padding:0.65rem 0.8rem;border-bottom:1px solid var(--border)}
+.data-table .num{font-family:var(--mono);text-align:right;color:var(--head)}
+.data-table tr:hover{background:rgba(255,255,255,0.015)}
+.data-table tfoot td{font-weight:700;color:var(--head);border-top:2px solid var(--border2)}
+
+.badge-crit{background:rgba(255,82,82,0.15);color:var(--red);padding:0.15rem 0.5rem;border-radius:4px;font-size:0.75rem;font-weight:700}
+.badge-high{background:rgba(255,171,64,0.15);color:var(--amber);padding:0.15rem 0.5rem;border-radius:4px;font-size:0.75rem;font-weight:700}
+
+/* CARDS */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem}
+.card h3{font-size:1rem;color:var(--head);margin-bottom:0.5rem}
+.card p{font-size:0.85rem;color:var(--text);line-height:1.6}
+.card .tag{display:inline-block;font-family:var(--mono);font-size:0.65rem;padding:0.2rem 0.5rem;border-radius:4px;margin-right:0.3rem;margin-bottom:0.3rem}
+.tag-green{background:rgba(0,230,118,0.12);color:var(--green)}
+.tag-blue{background:rgba(68,138,255,0.12);color:var(--blue)}
+.tag-purple{background:rgba(179,136,255,0.12);color:var(--purple)}
+
+/* PRICING */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.pricing-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:2rem;text-align:center;position:relative}
+.pricing-card.featured{border-color:var(--green);background:var(--surface2)}
+.pricing-card .plan{font-size:0.8rem;color:var(--text);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1rem}
+.pricing-card .price{font-size:2.5rem;font-weight:800;color:var(--head);font-family:var(--mono)}
+.pricing-card .price span{font-size:0.9rem;color:var(--text)}
+.pricing-card .features{text-align:left;margin:1.5rem 0;font-size:0.85rem}
+.pricing-card .features li{list-style:none;padding:0.3rem 0;color:var(--text)}
+.pricing-card .features li::before{content:'✓ ';color:var(--green);font-weight:700}
+
+.btn{display:inline-block;padding:0.6rem 1.2rem;border-radius:6px;font-size:0.85rem;font-weight:700;text-decoration:none;cursor:pointer;border:none;transition:all 0.2s}
+.btn-primary{background:var(--green);color:#000}
+.btn-primary:hover{background:#00cc6a;transform:translateY(-1px)}
+.btn-outline{border:1px solid var(--border2);color:var(--head);background:transparent}
+.btn-outline:hover{border-color:var(--text)}
+.btn-lg{padding:0.8rem 2rem;font-size:0.95rem}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:3rem;text-align:center;font-size:0.8rem;color:var(--text)}
+
+.paper-cta{background:linear-gradient(135deg,rgba(0,230,118,0.08),rgba(0,229,255,0.05));border:1px solid var(--border2);border-radius:10px;padding:2rem;text-align:center;margin:2rem 0}
+.paper-cta h3{color:var(--head);margin-bottom:0.5rem}
+.paper-cta p{color:var(--text2);margin-bottom:1rem}
+
+@media(max-width:768px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .pricing-grid{grid-template-columns:1fr}
+  .card-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Agent<span>Guard</span> Enterprise</a>
+    <a href="https://github.com/dockfixlabs/agentguard" class="nav-cta">GitHub</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<header class="hero">
+  <div class="hero-badge"><span class="dot"></span> v0.7.0 — 22 detection rules across 10 frameworks</div>
+  <h1>AI Agent Security<br><span class="green">at Enterprise Scale</span></h1>
+  <p class="hero-sub">The only security scanner purpose-built for AI agent code. 6,173 findings discovered across 10 major frameworks. OWASP ASI Top 10 compliant. CWE + CVSS mapped. Now with team dashboards, CI/CD integration, and enterprise SSO.</p>
+</header>
+
+<!-- STATS -->
+<div class="stats-grid">
+  <div class="stat"><div class="stat-val">10</div><div class="stat-label">Frameworks</div><div class="stat-sub">Scanned & audited</div></div>
+  <div class="stat"><div class="stat-val">6,173</div><div class="stat-label">Findings</div><div class="stat-sub">1,764 critical</div></div>
+  <div class="stat"><div class="stat-val">22</div><div class="stat-label">Rules</div><div class="stat-sub">CWE + CVSS mapped</div></div>
+  <div class="stat"><div class="stat-val">139</div><div class="stat-label">Tests</div><div class="stat-sub">100% pass rate</div></div>
+</div>
+
+<!-- FINDINGS TABLE -->
+<section class="section">
+  <h2>Framework Audit Results</h2>
+  <p class="section-desc">Every finding is reproducible. Run <code>pip install dfx-agentguard && agentguard .</code> on any framework to verify.</p>
+  <div style="overflow-x:auto">
+  <table class="data-table">
+    <thead>
+      <tr><th>Framework</th><th>Type</th><th class="num">Files</th><th class="num">Findings</th><th class="num">Critical</th><th class="num">High</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>LangChain</td><td>Agent Framework</td><td class="num">1,784</td><td class="num">452</td><td class="num"><span class="badge-crit">12</span></td><td class="num"><span class="badge-high">47</span></td></tr>
+      <tr><td>LlamaIndex</td><td>Data Framework</td><td class="num">2,951</td><td class="num">1,003</td><td class="num"><span class="badge-crit">8</span></td><td class="num"><span class="badge-high">31</span></td></tr>
+      <tr><td>AutoGen</td><td>Multi-Agent</td><td class="num">549</td><td class="num">229</td><td class="num"><span class="badge-crit">11</span></td><td class="num"><span class="badge-high">38</span></td></tr>
+      <tr><td>CAMEL</td><td>Multi-Agent</td><td class="num">899</td><td class="num">746</td><td class="num"><span class="badge-crit">9</span></td><td class="num"><span class="badge-high">52</span></td></tr>
+      <tr><td>CrewAI</td><td>Role-Based</td><td class="num">84</td><td class="num">391</td><td class="num"><span class="badge-crit">5</span></td><td class="num"><span class="badge-high">28</span></td></tr>
+      <tr><td>Qwen-Agent</td><td>Assistant</td><td class="num">239</td><td class="num">441</td><td class="num"><span class="badge-crit">2</span></td><td class="num"><span class="badge-high">42</span></td></tr>
+      <tr><td>Semantic Kernel</td><td>SDK</td><td class="num">561</td><td class="num">282</td><td class="num"><span class="badge-crit">169</span></td><td class="num"><span class="badge-high">107</span></td></tr>
+      <tr><td>Haystack</td><td>RAG</td><td class="num">1,540</td><td class="num">209</td><td class="num"><span class="badge-crit">45</span></td><td class="num"><span class="badge-high">126</span></td></tr>
+      <tr><td style="color:var(--red)">Dify</td><td>LLM Platform</td><td class="num">1,886</td><td class="num" style="color:var(--red)">1,725</td><td class="num"><span class="badge-crit">1,038</span></td><td class="num"><span class="badge-high">661</span></td></tr>
+      <tr><td>OpenAI Agents SDK</td><td>Agent SDK</td><td class="num">543</td><td class="num">695</td><td class="num"><span class="badge-crit">465</span></td><td class="num"><span class="badge-high">188</span></td></tr>
+    </tbody>
+    <tfoot>
+      <tr><td>Total</td><td>&mdash;</td><td class="num">11,036</td><td class="num">6,173</td><td class="num"><span class="badge-crit">1,764</span></td><td class="num"><span class="badge-high">1,320</span></td></tr>
+    </tfoot>
+  </table>
+  </div>
+</section>
+
+<!-- RESEARCH PAPER -->
+<div class="paper-cta">
+  <h3>Research Paper: "6,173 Security Findings in 9 AI Agent Frameworks"</h3>
+  <p>A systematic static analysis revealing structural security gaps in AI agent code. 22 detection rules, 10 frameworks, 1,764 critical vulnerabilities.</p>
+  <a href="https://github.com/dockfixlabs/agentguard/blob/main/PAPER_6173_FINDINGS.md" class="btn btn-primary">Read the Paper</a>
+</div>
+
+<!-- NOVEL RULES -->
+<section class="section">
+  <h2>Novel Detection Rules — Beyond OWASP ASI</h2>
+  <p class="section-desc">Attack vectors discovered during our audit of real-world agent codebases. None exist in any other SAST tool.</p>
+  <div class="card-grid">
+    <div class="card">
+      <h3>ASI-MEMORY-POISON</h3>
+      <p>Adversarial content injected into vector databases and agent memory stores. 26 sink patterns across Chroma, Pinecone, FAISS, Weaviate.</p>
+      <span class="tag tag-purple">CWE-502</span><span class="tag tag-green">CVSS 8.2</span>
+    </div>
+    <div class="card">
+      <h3>ASI-TOOL-TRUST</h3>
+      <p>Agent blindly trusts tool output without validation, enabling chained exploitation via compromised downstream tools.</p>
+      <span class="tag tag-purple">CWE-345</span><span class="tag tag-green">CVSS 8.6</span>
+    </div>
+    <div class="card">
+      <h3>ASI-CHAIN-AMPLIFY</h3>
+      <p>Destructive operations inside unbounded loops. Single prompt injection triggers infinite destructive execution.</p>
+      <span class="tag tag-purple">CWE-834</span><span class="tag tag-green">CVSS 7.5</span>
+    </div>
+    <div class="card">
+      <h3>ASI-AGENT-COLLUSION</h3>
+      <p>Multi-agent systems using shared state as covert channel. 1,010 instances detected in Dify alone.</p>
+      <span class="tag tag-purple">CWE-265</span><span class="tag tag-green">CVSS 6.8</span>
+    </div>
+    <div class="card">
+      <h3>ASI-MOUNT-EXPOSURE</h3>
+      <p>Docker executors exposing host filesystem without validation. Detects sensitive volume mounts in container configs.</p>
+      <span class="tag tag-purple">CWE-732</span><span class="tag tag-green">CVSS 8.6</span>
+    </div>
+    <div class="card">
+      <h3>ASI-MEMORY-CLASS-CONFUSION</h3>
+      <p>Agent memory writes that modify execution constraints, tool access, or governance state without authorization.</p>
+      <span class="tag tag-purple">CWE-863</span><span class="tag tag-green">CVSS 7.8</span>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section">
+  <h2>Enterprise Plans</h2>
+  <p class="section-desc">Secure your AI agent codebase. Pay in USDC. MIT-licensed open core.</p>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="plan">Community</div>
+      <div class="price">Free</div>
+      <ul class="features">
+        <li>CLI scanner</li>
+        <li>Pre-commit hook</li>
+        <li>22 detection rules</li>
+        <li>SARIF output</li>
+        <li>GitHub Action</li>
+        <li>Docker image</li>
+      </ul>
+      <a href="https://github.com/dockfixlabs/agentguard" class="btn btn-outline">Install</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="plan" style="color:var(--green)">Team — Early Adopter</div>
+      <div class="price">$29<span>/mo</span></div>
+      <ul class="features">
+        <li>Everything in Community</li>
+        <li>Team dashboard</li>
+        <li>5 seats</li>
+        <li>Trend analytics</li>
+        <li>CI/CD integration</li>
+        <li>Email support</li>
+      </ul>
+      <a href="#" class="btn btn-primary">Coming Soon</a>
+    </div>
+    <div class="pricing-card">
+      <div class="plan">Enterprise</div>
+      <div class="price">$299<span>/mo</span></div>
+      <ul class="features">
+        <li>Everything in Team</li>
+        <li>Unlimited seats</li>
+        <li>SSO / SAML</li>
+        <li>Private rules</li>
+        <li>API access</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="#" class="btn btn-outline">Contact Sales</a>
+    </div>
+  </div>
+  <p style="text-align:center;margin-top:1rem;font-size:0.8rem;color:var(--text)">All payments in USDC. 50% off for first 100 early adopters. <a href="https://github.com/dockfixlabs/agentguard" style="color:var(--blue)">Open source MIT license</a>.</p>
+</section>
+
+<footer>
+  <p><strong>DockFix Labs</strong> — Autonomous Security for the AI Agent Era</p>
+  <p style="margin-top:0.5rem"><a href="https://github.com/dockfixlabs/agentguard" style="color:var(--blue)">AgentGuard v0.7.0</a> · <a href="https://pypi.org/project/dfx-agentguard/" style="color:var(--blue)">PyPI</a> · <a href="https://dockfixlabs.github.io" style="color:var(--blue)">Website</a></p>
+</footer>
+
+</div>
+</body>
+</html>
