@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AgentGuard — AI Agent Security Scanner | DockFix Labs</title>
-<meta name="description" content="AgentGuard: First dedicated SAST scanner for AI agent code. 22 detection rules, 88% verified precision, 5,605 findings across 7 frameworks. OWASP ASI Top 10 compliant. LGPL v3.">
+<meta name="description" content="AgentGuard: First dedicated SAST scanner for AI agent code. 22 detection rules, 88% verified precision, 951 CONFIRMED findings, 88% verified precision. OWASP ASI Top 10 compliant. LGPL v3.">
 <meta property="og:title" content="AgentGuard — Autonomous Security for AI Agent Code">
 <meta property="og:description" content="22 detection rules with CWE/CVSS. 88% precision. 7 frameworks audited. 1 GHSA + 2 reported vulnerabilities. The standard for AI agent code security.">
 <meta property="og:type" content="website">
@@ -359,10 +359,7 @@ footer { border-top: 1px solid var(--border); padding: 4rem 0 2rem; margin-top: 
       <a href="#precision">Precision</a>
       <a href="#results">Audit</a>
       <a href="#vulnerabilities">GHSAs</a>
-      <a href="#compare">Compare</a>
-      <a href="#ecosystem">Ecosystem</a>
       <a href="#install">Install</a>
-      <a href="#roadmap">Roadmap</a>
       <a href="https://github.com/dockfixlabs/agentguard" class="nav-cta">GitHub ↗</a>
     </div>
   </div>
@@ -435,9 +432,9 @@ footer { border-top: 1px solid var(--border); padding: 4rem 0 2rem; margin-top: 
     <div class="stat-sub">Python, JavaScript, TypeScript, YAML, TOML, JSON</div>
   </div>
   <div class="stat-item">
-    <div class="stat-value">5,605</div>
-    <div class="stat-label">Post-Filter Findings</div>
-    <div class="stat-sub">951 CONFIRMED · 32,923 cumulative risk score</div>
+    <div class="stat-value stat-highlight">951</div>
+    <div class="stat-label">CONFIRMED Findings</div>
+    <div class="stat-sub">88% precision · 7 frameworks · <span class="rich-muted">5,605 raw before filtering</span></div>
   </div>
   <div class="stat-item">
     <div class="stat-value stat-highlight">88%</div>
@@ -645,7 +642,7 @@ footer { border-top: 1px solid var(--border); padding: 4rem 0 2rem; margin-top: 
   </div>
   <table class="data-table">
     <thead>
-      <tr><th>Framework</th><th>Type</th><th class="num">Files</th><th class="num">Findings</th><th class="num">CONFIRMED</th><th class="num">Risk Score</th></tr>
+      <tr><th>Framework</th><th>Type</th><th class="num">Files</th><th class="num">Raw Findings</th><th class="num">CONFIRMED</th><th class="num">Risk Score</th></tr>
     </thead>
     <tbody>
       <tr><td>Dify</td><td>LLM Platform</td><td class="num">2,030</td><td class="num">1,687</td><td class="num">216</td><td class="num crit-cell">12,570</td></tr>
@@ -661,7 +658,7 @@ footer { border-top: 1px solid var(--border); padding: 4rem 0 2rem; margin-top: 
     </tfoot>
   </table>
   <p style="font-size:0.82rem; color:var(--text); margin-top:0.5rem;">
-    Classification tiers: <strong>CONFIRMED</strong> (high-confidence true positive) · <strong>INVESTIGATE</strong> (needs manual review) · <strong>BEST_PRACTICE</strong> (advisory) · <strong>LIKELY_FP</strong> (filtered).
+    5,605 total raw findings across 7 frameworks (pre-filtering). Classification tiers: <strong>CONFIRMED</strong> (high-confidence true positive) · <strong>INVESTIGATE</strong> (needs manual review) · <strong>BEST_PRACTICE</strong> (advisory) · <strong>LIKELY_FP</strong> (filtered).
   </p>
 </section>
 
@@ -704,82 +701,9 @@ footer { border-top: 1px solid var(--border); padding: 4rem 0 2rem; margin-top: 
   </div>
 </section>
 
-<!-- ===== COMPARISON ===== -->
-<section class="section" id="compare">
-  <div class="section-header">
-    <div class="section-tag">Competitive Landscape</div>
-    <h2>What AgentGuard Detects That Others Miss</h2>
-    <p class="section-desc">
-      Based on default rule sets as of July 2026. "Partial" means some coverage via general-purpose rules, but no agent-specific detection.
-    </p>
-  </div>
-  <table class="compare-table">
-    <thead>
-      <tr><th>Detection Capability</th><th style="color:var(--green)">AgentGuard</th><th>Semgrep OSS</th><th>CodeQL</th><th>Bandit</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>Prompt Injection (ASI01)</td><td class="yes">✓ AST Taint</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>Tool Abuse (ASI02)</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="partial">Partial</td></tr>
-      <tr><td>Data Exfiltration (ASI03)</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>Excessive Agency (ASI04)</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>Supply Chain (ASI05)</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>Insecure Output (ASI06)</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>Credential Exposure (ASI07)</td><td class="yes">✓</td><td class="partial">Partial</td><td class="partial">Partial</td><td class="yes">✓</td></tr>
-      <tr><td>Context Manipulation (ASI08)</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>Agent Loop Exploit (ASI09)</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>Trust Boundary (ASI10)</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>Novel Rules (6 classes)</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>AST Taint Tracking</td><td class="yes">✓</td><td class="no">✗</td><td class="partial">Data Flow</td><td class="no">✗</td></tr>
-      <tr style="border-top:1px solid var(--border2);"><td><strong>OWASP ASI Coverage</strong></td><td style="color:var(--green)"><strong>10/10</strong></td><td>1/10</td><td>1/10</td><td>2/10</td></tr>
-    </tbody>
-  </table>
-  <p style="font-size:0.78rem; color:var(--text); margin-top:0.3rem;">
-    Assessment methodology: Compared default rule sets of each tool against OWASP ASI Top 10 categories. AgentGuard v0.8.2 vs Semgrep OSS v1.x, CodeQL default queries, Bandit v1.7.
-  </p>
-</section>
-
-<!-- ===== ECOSYSTEM ===== -->
-<section class="section" id="ecosystem">
-  <div class="section-header">
-    <div class="section-tag">Product Ecosystem</div>
-    <h2>Four Tools. One Mission.</h2>
-  </div>
-  <div class="eco-grid">
-    <div class="eco-card">
-      <div class="tag green">CORE SCANNER</div>
-      <h3>AgentGuard</h3>
-      <p>22 rules. AST taint tracking. SARIF/JSON/Markdown output. Pre-commit hook. GitHub Action. Docker. MCP server. False positive filter. 4-tier classification.</p>
-      <div class="eco-links">
-        <a href="https://github.com/dockfixlabs/agentguard" class="btn btn-outline" style="font-size:0.78rem;padding:0.4rem 0.9rem;">GitHub</a>
-        <a href="https://pypi.org/project/dfx-agentguard/" class="btn btn-ghost" style="font-size:0.78rem;padding:0.4rem 0.9rem;">PyPI</a>
-      </div>
-    </div>
-    <div class="eco-card">
-      <div class="tag cyan">COMPANION</div>
-      <h3>MCP Scanner</h3>
-      <p>12 security checks for MCP server configurations. Detects Docker privileged mode, root user, network binding, shell injection, argument injection. SARIF output.</p>
-      <div class="eco-links">
-        <a href="https://github.com/dockfixlabs/mcp-scanner" class="btn btn-outline" style="font-size:0.78rem;padding:0.4rem 0.9rem;">GitHub</a>
-        <a href="https://pypi.org/project/dfx-mcp-scanner/" class="btn btn-ghost" style="font-size:0.78rem;padding:0.4rem 0.9rem;">PyPI</a>
-      </div>
-    </div>
-    <div class="eco-card">
-      <div class="tag green">AUTOMATION</div>
-      <h3>AgentGuard App</h3>
-      <p>GitHub App that scans every PR automatically. Posts inline review comments. SARIF uploads. Zero configuration for public repos.</p>
-      <div class="eco-links">
-        <a href="https://github.com/dockfixlabs/agentguard-app" class="btn btn-outline" style="font-size:0.78rem;padding:0.4rem 0.9rem;">GitHub</a>
-      </div>
-    </div>
-    <div class="eco-card">
-      <div class="tag cyan">IDE</div>
-      <h3>VS Code Extension</h3>
-      <p>Real-time scanning as you type. Red squigglies on agent security issues. Quick-fix suggestions. Integrated with the Problems panel.</p>
-      <div class="eco-links">
-        <a href="https://github.com/dockfixlabs/agentguard-vscode" class="btn btn-outline" style="font-size:0.78rem;padding:0.4rem 0.9rem;">GitHub</a>
-      </div>
-    </div>
-  </div>
+<!-- ===== ONE PRODUCT ===== -->
+<section class="section" style="padding:1rem 0 2rem;">
+  <p style="font-size:0.8rem; color:var(--text); text-align:center;">Additional tools (MCP Scanner, GitHub App, VS Code extension) in development.</p>
 </section>
 
 <!-- ===== INSTALL ===== -->
@@ -820,48 +744,6 @@ agentguard install --pre-commit</pre>
   </div>
 </section>
 
-<!-- ===== ROADMAP ===== -->
-<section class="section" id="roadmap">
-  <div class="section-header">
-    <div class="section-tag">Roadmap</div>
-    <h2>Where We're Going</h2>
-    <p class="section-desc">
-      Built on evidence from studying 8 successful developer tools (Snyk, Semgrep, Bandit, Tailwind CSS, Sidekiq, Laravel, Supabase, Cal.com).
-    </p>
-  </div>
-
-  <div class="timeline">
-    <div class="tl-item done">
-      <div class="tl-phase">Phase 1 <span class="tl-done">✓ DONE</span></div>
-      <div class="tl-title">Prove Technical Value</div>
-      <div class="tl-desc">22 rules · AST taint tracking · FP filter · 4-tier classification · Auto-reporter · 88% independent precision · PyPI v0.8.2 · LGPL v3 · 3 GHSAs submitted</div>
-    </div>
-    <div class="tl-item active">
-      <div class="tl-phase">Phase 2 · Aug–Oct 2026</div>
-      <div class="tl-title">Build Audience</div>
-      <div class="tl-desc">Launch Week · JS/TS rules · AgentGuard Playground · Community rule registry · OWASP ASI badge · Blog series · Conference proposals · Discord at 100+ stars</div>
-    </div>
-    <div class="tl-item future">
-      <div class="tl-phase">Phase 3 · Nov–Jan 2027</div>
-      <div class="tl-title">First Paid Users</div>
-      <div class="tl-desc">AgentGuard Pro: private rules engine + team dashboard · $99/seat/month · 3 pilot customers · GitHub App integration</div>
-    </div>
-    <div class="tl-item future">
-      <div class="tl-phase">Phase 4 · Feb–Apr 2027</div>
-      <div class="tl-title">Product-Market Fit</div>
-      <div class="tl-desc">Full JS/TS parity · AgentGuard Cloud · Enterprise tier · Integration marketplace · First CVE</div>
-    </div>
-    <div class="tl-item future">
-      <div class="tl-phase">Phase 5 · May–Jul 2027</div>
-      <div class="tl-title">Scale</div>
-      <div class="tl-desc">AgentGuard Academy · Annual "State of AI Agent Security" report · Expand to Go, Rust, Java · $10K MRR target</div>
-    </div>
-  </div>
-  <p style="font-size:0.78rem; color:var(--text); margin-top:0.5rem;">
-    Full roadmap: <a href="https://github.com/dockfixlabs/agentguard/blob/main/ROADMAP.md" style="color:var(--blue);">ROADMAP.md</a>
-  </p>
-</section>
-
 <!-- ===== FOOTER ===== -->
 <footer>
   <div class="footer-grid">
@@ -872,9 +754,7 @@ agentguard install --pre-commit</pre>
     <div class="footer-col">
       <h4>Products</h4>
       <a href="https://github.com/dockfixlabs/agentguard">AgentGuard</a>
-      <a href="https://github.com/dockfixlabs/mcp-scanner">MCP Scanner</a>
-      <a href="https://github.com/dockfixlabs/agentguard-app">GitHub App</a>
-      <a href="https://github.com/dockfixlabs/agentguard-vscode">VS Code Extension</a>
+      <a href="https://github.com/dockfixlabs">All Projects</a>
     </div>
     <div class="footer-col">
       <h4>Resources</h4>
