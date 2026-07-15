@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AgentGuard — Autonomous Security for AI Agent Code | DockFix Labs</title>
-<meta name="description" content="AgentGuard: OWASP ASI Top 10 compliant security scanner. 22 detection rules with CWE/CVSS mappings. Scanned 9 frameworks, 11,036 files, 6,173 findings. MIT licensed.">
+<meta name="description" content="AgentGuard: OWASP ASI Top 10 compliant security scanner. 22 detection rules with CWE/CVSS mappings. Scanned 9 frameworks, 11,036 files, 6,173 findings. LGPL v3 Licensed.">
 <meta property="og:title" content="AgentGuard — Autonomous Security for AI Agent Code">
-<meta property="og:description" content="22 detection rules. 9 frameworks scanned. 6,173 findings. 56 benchmark samples covering all 22 detection rules. OWASP ASI compliant. MIT licensed.">
+<meta property="og:description" content="22 detection rules. 9 frameworks scanned. 6,173 findings. 56 benchmark samples covering all 22 detection rules. OWASP ASI compliant. LGPL v3 Licensed.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <style>
@@ -221,11 +221,11 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 4rem;
 <header class="hero" id="top">
   <div class="hero-badge">
     <span class="dot"></span>
-    v0.7.0 &mdash; Now with Docker, pre-commit, SARIF, and 22 detection rules
+    v0.8.2 &mdash; Now with Docker, pre-commit, SARIF, and 22 detection rules
   </div>
   <h1>Autonomous Security<br>for the <span class="gradient">AI Agent Era</span></h1>
   <p class="hero-desc">
-    AgentGuard is an open-source static analysis tool purpose-built for AI agent code. It detects 22 classes of security vulnerabilities — including 6 novel attack vectors beyond the OWASP ASI Top 10 — with CWE and CVSS mappings. Scanned 9 major frameworks. 6,173 findings. 56 hand-crafted benchmark samples demonstrate comprehensive rule coverage.
+    AgentGuard is an open-source static analysis tool purpose-built for AI agent code. It detects 22 classes of security vulnerabilities — including 6 novel attack vectors beyond the OWASP ASI Top 10 — with CWE and CVSS mappings. Scanned 9 major frameworks. 6,173 findings. 28 in-repo samples + 56 in benchmark suite. 88% precision on independent validation..
   </p>
   <div class="hero-actions">
     <a href="#install" class="btn btn-primary">Get Started</a>
@@ -404,7 +404,7 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 4rem;
 <div class="alert">
   <div class="alert-title">Active Vulnerability Disclosure</div>
   <div class="alert-body">
-    CWE-1188 (CVSS 10.0) discovered in LangChain <code>ShellToolMiddleware</code> during routine scanning. The default <code>ExecutionPolicy.HOST</code> grants unrestricted host command execution with zero sandboxing. Code path: <code>shell_tool.py:503-534</code>. Reported via GitHub Private Vulnerability Reporting. Full technical writeup in the <a href="https://github.com/dockfixlabs/agentguard/blob/main/AUDIT_REPORT_2026.md">Audit Report</a>.
+    CVSS 10.0 discovered in LangChain <code>ShellToolMiddleware</code> during routine scanning. The default <code>ExecutionPolicy.HOST</code> grants unrestricted host command execution with zero sandboxing. Code path: <code>shell_tool.py:503-534</code>. Reported via GitHub Private Vulnerability Reporting. Full technical writeup in the <a href="https://github.com/dockfixlabs/agentguard/blob/main/AUDIT_REPORT_2026.md">Audit Report</a>.
   </div>
 </div>
 
@@ -456,11 +456,11 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 4rem;
   </div>
   <div class="trust-item">
     <div class="icon" style="color:var(--blue)">&#9679;</div>
-    <div class="label">MIT Licensed</div>
+    <div class="label">LGPL v3 Licensed</div>
   </div>
   <div class="trust-item">
     <div class="icon" style="color:var(--purple)">&#9679;</div>
-    <div class="label">107 Tests</div>
+    <div class="label">139 Tests</div>
   </div>
 </div>
 
@@ -547,7 +547,7 @@ agentguard install --pre-commit</pre>
       <a href="https://github.com/dockfixlabs">GitHub Organization</a>
     </div>
   </div>
-  <p style="margin-top:2rem;font-size:0.75rem;color:var(--text);">MIT Licensed. &copy; 2026 DockFix Labs.</p>
+  <p style="margin-top:2rem;font-size:0.75rem;color:var(--text);">LGPL v3 Licensed. &copy; 2026 DockFix Labs.</p>
 </footer>
 
 </div>
