@@ -6,7 +6,7 @@
 <title>AgentGuard — AI Agent Security Scanner | DockFix Labs</title>
 <meta name="description" content="AgentGuard: First dedicated SAST scanner for AI agent code. 22 detection rules, 88% verified precision, 5,605 findings across 7 frameworks. OWASP ASI Top 10 compliant. LGPL v3.">
 <meta property="og:title" content="AgentGuard — Autonomous Security for AI Agent Code">
-<meta property="og:description" content="22 detection rules with CWE/CVSS. 88% precision. 7 frameworks audited. 3 real GHSAs. The standard for AI agent code security.">
+<meta property="og:description" content="22 detection rules with CWE/CVSS. 88% precision. 7 frameworks audited. 1 GHSA + 2 reported vulnerabilities. The standard for AI agent code security.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://dockfixlabs.github.io/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -671,35 +671,35 @@ footer { border-top: 1px solid var(--border); padding: 4rem 0 2rem; margin-top: 
     <div class="section-tag">Active Disclosures</div>
     <h2>Real Vulnerabilities. Real Impact.</h2>
     <p class="section-desc">
-      AgentGuard found these in production code. All reported through responsible disclosure channels.
+      Found in production code. 3 GitHub Security Advisories (GHSAs) filed against LangChain + 2 technical issues reported to AutoGen. All through responsible disclosure.
     </p>
   </div>
 
   <div class="ghsa-grid">
     <div class="ghsa-card">
-      <div class="severity critical">CRITICAL · CVSS 10.0</div>
+      <div class="severity critical">GHSA · CVSS 10.0</div>
       <div class="title">Unrestricted Host Command Execution</div>
       <div class="target">LangChain · ShellToolMiddleware</div>
-      <div class="status">Reported · Awaiting maintainer response</div>
+      <div class="status">GHSA · Awaiting maintainer response</div>
     </div>
     <div class="ghsa-card">
-      <div class="severity high">HIGH · CVSS 8.6</div>
+      <div class="severity high">GHSA · CVSS 8.6</div>
       <div class="title">Tool Registration Without Validation</div>
       <div class="target">LangChain · Tool Registry</div>
-      <div class="status">Reported · In triage</div>
+      <div class="status">GHSA · In triage</div>
     </div>
     <div class="ghsa-card">
-      <div class="severity high">HIGH · CVSS 7.8</div>
+      <div class="severity high">GHSA · CVSS 7.8</div>
       <div class="title">Agent Memory Store Injection</div>
       <div class="target">LangChain · Vector Store</div>
-      <div class="status">Reported · In triage</div>
+      <div class="status">GHSA · In triage</div>
     </div>
   </div>
 
   <div class="alert" style="margin-top:1rem;">
     <div class="alert-title">Also Reported to AutoGen</div>
     <div class="alert-body">
-      Two technical issues filed: <a href="https://github.com/microsoft/autogen/issues/7917">#7917 — Unrestricted Tool Execution</a> and <a href="https://github.com/microsoft/autogen/issues/7918">#7918 — Credential Exposure via Agent Logging</a>. Active technical discussion with the AutoGen team.
+      Additionally, 2 GitHub Issues filed with AutoGen (not GHSAs — these are public technical reports): <a href="https://github.com/microsoft/autogen/issues/7917">#7917 — Unrestricted Tool Execution</a> and <a href="https://github.com/microsoft/autogen/issues/7918">#7918 — Credential Exposure via Agent Logging</a>. Active technical discussion with the AutoGen team.
     </div>
   </div>
 </section>
